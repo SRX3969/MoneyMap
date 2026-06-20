@@ -169,7 +169,7 @@ function AddTransactionForm({ onClose }: AddTransactionFormProps) {
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-semibold text-text-muted">₹</span>
                 <input type="number" required placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)}
-                  className="input-field w-full pl-9 text-lg font-extrabold" />
+                  className="input-field w-full pl-icon-left text-lg font-extrabold" />
               </div>
             </div>
 
@@ -195,14 +195,14 @@ function AddTransactionForm({ onClose }: AddTransactionFormProps) {
                 <label className="text-xs font-semibold text-text-secondary uppercase">Date</label>
                 <div className="relative">
                   <CalendarIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-                  <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="input-field w-full pl-11 text-sm" />
+                  <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="input-field w-full pl-icon-left text-sm" />
                 </div>
               </div>
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-text-secondary uppercase">Time</label>
                 <div className="relative">
                   <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-                  <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="input-field w-full pl-11 text-sm" />
+                  <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="input-field w-full pl-icon-left text-sm" />
                 </div>
               </div>
             </div>

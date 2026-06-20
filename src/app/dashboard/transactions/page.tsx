@@ -213,7 +213,7 @@ export default function TransactionsLedger() {
           <div className="relative">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)}
-              className="input-field w-full pl-10 text-sm" />
+              className="input-field w-full pl-icon-left text-sm" />
           </div>
           <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="input-field text-sm">
             <option value="">All Categories</option>

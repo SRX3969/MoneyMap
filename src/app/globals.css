@@ -157,6 +157,14 @@ body {
   padding: 10px 16px;
 }
 
+.pl-icon-left {
+  padding-left: 44px !important;
+}
+
+.pr-icon-right {
+  padding-right: 48px !important;
+}
+
 .input-field:focus {
   border-color: #7C3AED;
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);

@@ -296,7 +296,7 @@ export default function LoginPage() {
                         value={name} 
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Sahil Verma"
-                        className="input-field w-full pl-12 text-sm py-3" 
+                        className="input-field w-full pl-icon-left text-sm py-3" 
                       />
                     </div>
                   </motion.div>
@@ -317,7 +317,7 @@ export default function LoginPage() {
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="sahil@example.com"
-                    className="input-field w-full pl-12 text-sm py-3" 
+                    className="input-field w-full pl-icon-left text-sm py-3" 
                   />
                 </div>
               </div>
@@ -341,7 +341,7 @@ export default function LoginPage() {
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="input-field w-full pl-12 pr-12 text-sm py-3" 
+                    className="input-field w-full pl-icon-left pr-icon-right text-sm py-3" 
                   />
                   <button 
                     type="button" 
@@ -374,7 +374,7 @@ export default function LoginPage() {
                         value={confirmPassword} 
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="input-field w-full pl-12 pr-12 text-sm py-3" 
+                        className="input-field w-full pl-icon-left pr-icon-right text-sm py-3" 
                       />
                     </div>
                   </motion.div>
