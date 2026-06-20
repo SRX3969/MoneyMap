@@ -49,9 +49,27 @@ export default function Dashboard() {
   const transactions = useQuery(api.transactions.list, {}) || [];
 
   const [isMounted, setIsMounted] = useState(false);
+  const [userName, setUserName] = useState("Sahil");
 
   useEffect(() => {
     setIsMounted(true);
+    const fetchUser = () => {
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("moneymap_user");
+        if (saved) {
+          try {
+            const u = JSON.parse(saved);
+            if (u && u.name) {
+              const first = u.name.trim().split(/\s+/)[0];
+              setUserName(first);
+            }
+          } catch (e) {}
+        }
+      }
+    };
+    fetchUser();
+    window.addEventListener("moneymap_auth_change", fetchUser);
+    return () => window.removeEventListener("moneymap_auth_change", fetchUser);
   }, []);
 
   if (!dashboardData) {
@@ -182,7 +200,7 @@ export default function Dashboard() {
       >
         <div>
           <h1 className="text-2xl md:text-[32px] font-bold tracking-tight text-text-primary leading-tight">
-            {getGreeting()}, Sahil 👋
+            {getGreeting()}, {userName} 👋
           </h1>
           <p className="text-sm text-text-secondary mt-1 font-medium">
             Your financial journey is looking great!
