@@ -85,6 +85,27 @@ const fadeUp = {
 export default function LandingPage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
 
+  // 3D Tilt states for premium visual mockup on landing page
+  const [tiltX, setTiltX] = useState(0);
+  const [tiltY, setTiltY] = useState(0);
+
+  const handleTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left - width / 2;
+    const mouseY = e.clientY - rect.top - height / 2;
+    const rX = -(mouseY / height) * 12; // max 12 degrees tilt
+    const rY = (mouseX / width) * 12; // max 12 degrees tilt
+    setTiltX(rX);
+    setTiltY(rY);
+  };
+
+  const handleTiltLeave = () => {
+    setTiltX(0);
+    setTiltY(0);
+  };
+
   return (
     <div className="min-h-screen bg-page-bg text-text-primary overflow-x-hidden selection:bg-brand selection:text-white">
       
@@ -176,16 +197,27 @@ export default function LandingPage() {
 
             {/* Right: Premium Interactive Dashboard Mockup Showcase */}
             <motion.div 
-              initial={{ opacity: 0, x: 45 }} 
-              animate={{ opacity: 1, x: 0 }} 
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-              className="hidden lg:block relative"
+              initial={{ opacity: 0, x: 45, rotateX: 0, rotateY: 0 }} 
+              animate={{ opacity: 1, x: 0, rotateX: tiltX, rotateY: tiltY }} 
+              transition={{
+                x: { duration: 0.8, ease: "easeOut", delay: 0.2 },
+                opacity: { duration: 0.8, ease: "easeOut", delay: 0.2 },
+                rotateX: { type: "spring", stiffness: 200, damping: 20 },
+                rotateY: { type: "spring", stiffness: 200, damping: 20 }
+              }}
+              onMouseMove={handleTiltMove}
+              onMouseLeave={handleTiltLeave}
+              style={{ transformStyle: "preserve-3d", perspective: 1000 }}
+              className="hidden lg:block relative cursor-pointer"
             >
               {/* Main shadow glow */}
               <div className="absolute -inset-4 bg-gradient-to-br from-brand/10 to-emerald-500/10 rounded-[32px] blur-3xl pointer-events-none" />
 
               {/* Main Dashboard Card */}
-              <div className="relative card p-6 space-y-5 border-2 border-purple-100/50 shadow-float z-10 hover:shadow-xl transition-all duration-300">
+              <div 
+                style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}
+                className="relative card p-6 space-y-5 border-2 border-purple-100/50 shadow-float z-10 hover:shadow-xl transition-all duration-300"
+              >
                 {/* Mock header */}
                 <div className="flex items-center justify-between">
                   <div>
@@ -258,6 +290,7 @@ export default function LandingPage() {
               <motion.div 
                 whileHover={{ y: -6, scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}
                 className="absolute -bottom-10 -left-8 w-64 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-border shadow-float z-20 cursor-default"
               >
                 <p className="text-xs font-bold text-text-primary mb-3">Recent Transactions</p>
@@ -292,6 +325,7 @@ export default function LandingPage() {
               <motion.div 
                 whileHover={{ y: -6, scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                style={{ transform: "translateZ(40px)", transformStyle: "preserve-3d" }}
                 className="absolute -top-8 -right-8 w-56 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-border shadow-float z-20 cursor-default"
               >
                 <div className="flex items-center justify-between mb-2">

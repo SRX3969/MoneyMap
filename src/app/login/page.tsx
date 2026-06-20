@@ -23,6 +23,27 @@ import {
 export default function LoginPage() {
   const router = useRouter();
   
+  // 3D tilt states for visual effects
+  const [tiltX, setTiltX] = useState(0);
+  const [tiltY, setTiltY] = useState(0);
+
+  const handleTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left - width / 2;
+    const mouseY = e.clientY - rect.top - height / 2;
+    const rX = -(mouseY / height) * 15;
+    const rY = (mouseX / width) * 15;
+    setTiltX(rX);
+    setTiltY(rY);
+  };
+
+  const handleTiltLeave = () => {
+    setTiltX(0);
+    setTiltY(0);
+  };
+
   // Auth Mode: "signin" | "signup"
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   
@@ -132,48 +153,91 @@ export default function LoginPage() {
 
       {/* LEFT SIDE: Branded premium card layout (Inspired by Reference) */}
       <div className="hidden lg:flex w-[48%] bg-slate-950 p-8 flex-col justify-between relative overflow-hidden">
-        {/* Abstract Glowing Waves Visual in MoneyMap Colors (Deep Blue, Purple, Teal) */}
+        {/* Subtle grid pattern overlay */}
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(#ffffff05_1.5px,transparent_1.5px)] [background-size:24px_24px] pointer-events-none" />
+
+        {/* Abstract Glowing Waves Visual in MoneyMap Colors */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute top-[-10%] right-[-10%] w-[70%] aspect-square rounded-full bg-brand/35 blur-[120px] animate-pulse" />
-          <div className="absolute bottom-[-10%] left-[-10%] w-[60%] aspect-square rounded-full bg-cyan-500/20 blur-[130px] animate-pulse" style={{ animationDelay: "2s" }} />
-          <div className="absolute top-[30%] left-[20%] w-[50%] aspect-square rounded-full bg-pink-500/15 blur-[140px]" />
+          <div className="absolute top-[-10%] right-[-10%] w-[70%] aspect-square rounded-full bg-brand/25 blur-[120px] animate-pulse" />
+          <div className="absolute bottom-[-10%] left-[-10%] w-[60%] aspect-square rounded-full bg-cyan-500/15 blur-[130px] animate-pulse" style={{ animationDelay: "2s" }} />
+          <div className="absolute top-[30%] left-[20%] w-[50%] aspect-square rounded-full bg-pink-500/10 blur-[140px]" />
           
           {/* Subtle animated path overlay */}
-          <svg className="absolute bottom-0 left-0 w-full h-[60%] opacity-40" viewBox="0 0 500 500" fill="none" preserveAspectRatio="none">
+          <svg className="absolute bottom-0 left-0 w-full h-[60%] opacity-30" viewBox="0 0 500 500" fill="none" preserveAspectRatio="none">
             <path d="M 0 350 Q 125 150 250 280 T 500 120 L 500 500 L 0 500 Z" fill="url(#waveGrad)" />
             <defs>
               <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.3" />
-                <stop offset="50%" stopColor="#4F46E5" stopOpacity="0.1" />
+                <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.25" />
+                <stop offset="50%" stopColor="#4F46E5" stopOpacity="0.08" />
                 <stop offset="100%" stopColor="#0B1528" stopOpacity="0.0" />
               </linearGradient>
             </defs>
           </svg>
         </div>
 
-        {/* Content top */}
-        <div className="relative z-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+        {/* Content top: Glassmorphic Quote Card */}
+        <div className="relative z-10 bg-white/[0.02] border border-white/[0.06] backdrop-blur-md p-6 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full mb-4">
+            <Sparkles className="w-3 h-3 text-brand" />
             <span className="text-[10px] uppercase tracking-widest text-brand font-bold">A Wise Quote</span>
           </div>
           
-          <blockquote className="mt-6 max-w-lg space-y-4">
-            <p className="text-xl md:text-2xl font-medium text-white/90 leading-relaxed font-serif italic">
+          <blockquote className="space-y-3">
+            <p className="text-lg md:text-xl font-medium text-white/95 leading-relaxed font-serif italic">
               &ldquo;Do not save what is left after spending, but spend what is left after saving.&rdquo;
             </p>
-            <cite className="block text-xs font-semibold text-brand-light not-italic uppercase tracking-widest">— Warren Buffett</cite>
+            <cite className="block text-xs font-bold text-brand-light not-italic uppercase tracking-widest">— Warren Buffett</cite>
           </blockquote>
+        </div>
+
+        {/* Content middle: 3D Floating Mockup Card with Mouse Tilt Interaction */}
+        <div className="relative z-10 flex-1 flex items-center justify-center py-6 min-h-[300px]">
+          <motion.div
+            onMouseMove={handleTiltMove}
+            onMouseLeave={handleTiltLeave}
+            animate={{ 
+              rotateX: tiltX, 
+              rotateY: tiltY,
+              y: [0, -8, 0] 
+            }}
+            transition={{
+              rotateX: { type: "spring", stiffness: 250, damping: 20 },
+              rotateY: { type: "spring", stiffness: 250, damping: 20 },
+              y: { 
+                duration: 6, 
+                repeat: Infinity, 
+                ease: "easeInOut",
+                repeatType: "reverse"
+              }
+            }}
+            style={{ transformStyle: "preserve-3d" }}
+            className="w-full max-w-[340px] aspect-[4/3] relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.4)] bg-slate-900/60 group cursor-pointer"
+          >
+            {/* Ambient inner glow */}
+            <div className="absolute -inset-10 bg-gradient-to-br from-brand/20 to-cyan-500/20 blur-2xl group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
+            
+            {/* The 3D login illustration */}
+            <img 
+              src="/login_graphic.png" 
+              alt="MoneyMap 3D Finance Illustration" 
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02] select-none pointer-events-none"
+              style={{ transform: "translateZ(30px)" }}
+            />
+            
+            {/* Sweeping reflection sheen */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/15 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+          </motion.div>
         </div>
 
         {/* Content bottom */}
         <div className="relative z-10 max-w-md">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
+          <h2 className="text-3xl font-extrabold text-white tracking-tight leading-tight">
             Map Every Rupee.<br />Build Wealth.
           </h2>
-          <p className="mt-4 text-sm text-white/60 leading-relaxed">
+          <p className="mt-3 text-sm text-white/50 leading-relaxed">
             Take complete control of your finances, budget intelligently, and let SHYN AI guide you to financial freedom. Join thousands of users today.
           </p>
-          <div className="mt-8 flex items-center gap-3 text-white/40 text-xs">
+          <div className="mt-6 flex items-center gap-3 text-white/30 text-xs">
             <ShieldCheck className="w-5 h-5 text-brand" />
             <span>End-to-end encrypted local sandbox security</span>
           </div>
