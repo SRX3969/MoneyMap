@@ -147,11 +147,14 @@ body {
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
   border-radius: 14px;
-  padding: 10px 16px;
   color: #0F172A;
   font-size: 14px;
   transition: all 0.2s ease;
   outline: none;
+}
+
+:where(.input-field) {
+  padding: 10px 16px;
 }
 
 .input-field:focus {
