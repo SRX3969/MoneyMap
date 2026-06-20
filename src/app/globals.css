@@ -1,0 +1,272 @@
+@import "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap";
+@import "tailwindcss";
+
+/* ============================================
+   MONEYMAP — PREMIUM FINTECH DESIGN SYSTEM
+   Light theme with dark navy sidebar
+   ============================================ */
+
+@theme {
+  --color-brand: #7C3AED;
+  --color-brand-light: #9333EA;
+  --color-brand-bg: #F5F3FF;
+  --color-accent-blue: #2563EB;
+  --color-accent-green: #10B981;
+  --color-accent-orange: #F59E0B;
+  --color-accent-red: #EF4444;
+  --color-accent-pink: #EC4899;
+  --color-sidebar: #04142C;
+  --color-sidebar-dark: #021124;
+  --color-page-bg: #F6F8FC;
+  --color-card: #FFFFFF;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-text-muted: #94A3B8;
+  --color-border: #E5E7EB;
+  --color-border-light: #F3F4F6;
+  --color-hover: #F3F4F6;
+  --color-hover-row: #F8FAFC;
+}
+
+:root {
+  --background: #F6F8FC;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --border: #E5E7EB;
+  --ring: #7C3AED;
+  --radius: 20px;
+}
+
+body {
+  background-color: #F6F8FC;
+  color: #0F172A;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   SCROLLBAR — HIDDEN FOR CLEAN UX
+   ============================================ */
+* {
+  scrollbar-width: none !important;
+}
+::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* ============================================
+   PREMIUM CARD SYSTEM
+   ============================================ */
+.card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  box-shadow: 0 15px 50px rgba(15, 23, 42, 0.08);
+}
+
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+}
+
+/* ============================================
+   BUTTON SYSTEM
+   ============================================ */
+.btn-primary {
+  background: linear-gradient(135deg, #7C3AED, #9333EA);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.35);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-secondary {
+  background: white;
+  color: #0F172A;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-secondary:hover {
+  background: #F3F4F6;
+  border-color: #D1D5DB;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #64748B;
+  border: none;
+  border-radius: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-ghost:hover {
+  background: #F3F4F6;
+  color: #0F172A;
+}
+
+/* ============================================
+   SIDEBAR GRADIENT
+   ============================================ */
+.sidebar-gradient {
+  background: linear-gradient(180deg, #071B39 0%, #021124 100%);
+}
+
+.sidebar-active {
+  background: linear-gradient(135deg, #7C3AED, #9333EA);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+/* ============================================
+   INPUT SYSTEM
+   ============================================ */
+.input-field {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  padding: 10px 16px;
+  color: #0F172A;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
+}
+
+.input-field::placeholder {
+  color: #94A3B8;
+}
+
+/* ============================================
+   SHADOW SYSTEM
+   ============================================ */
+.shadow-card {
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+}
+
+.shadow-hover {
+  box-shadow: 0 15px 50px rgba(15, 23, 42, 0.12);
+}
+
+.shadow-float {
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.15);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes counter {
+  from { --num: 0; }
+}
+
+/* ============================================
+   GRADIENT TEXT
+   ============================================ */
+.text-gradient-purple {
+  background: linear-gradient(135deg, #7C3AED, #9333EA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-green {
+  background: linear-gradient(135deg, #10B981, #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   CHART TOOLTIP
+   ============================================ */
+.chart-tooltip {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid #E5E7EB !important;
+  border-radius: 14px !important;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1) !important;
+  padding: 12px 16px !important;
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+.progress-gradient {
+  background: linear-gradient(90deg, #7C3AED, #9333EA);
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-green {
+  background: linear-gradient(90deg, #10B981, #059669);
+}
+
+.progress-orange {
+  background: linear-gradient(90deg, #F59E0B, #D97706);
+}
+
+.progress-red {
+  background: linear-gradient(90deg, #EF4444, #DC2626);
+}
+
+/* ============================================
+   SELECT & DATE INPUT OVERRIDES
+   ============================================ */
+select, input[type="date"], input[type="time"] {
+  color-scheme: light;
+}
