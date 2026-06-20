@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -60,6 +61,34 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { setAddTransactionOpen } = useDashboard();
 
+  const [currentUser, setCurrentUser] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("moneymap_user");
+      return saved ? JSON.parse(saved) : { name: "Sahil Verma" };
+    }
+    return { name: "Sahil Verma" };
+  });
+
+  const getInitials = (fullName: string) => {
+    return fullName
+      .split(" ")
+      .map((p) => p[0])
+      .join("")
+      .substring(0, 2)
+      .toUpperCase();
+  };
+
+  useEffect(() => {
+    const handleAuthChange = () => {
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("moneymap_user");
+        if (saved) setCurrentUser(JSON.parse(saved));
+      }
+    };
+    window.addEventListener("moneymap_auth_change", handleAuthChange);
+    return () => window.removeEventListener("moneymap_auth_change", handleAuthChange);
+  }, []);
+
   return (
     <aside className="hidden md:flex flex-col w-[280px] sidebar-gradient h-screen sticky top-0 shrink-0 select-none z-40 overflow-hidden">
       
@@ -76,10 +105,10 @@ export default function Sidebar() {
       <div className="px-5 py-4 border-b border-white/8 shrink-0">
         <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-white/5 border border-white/5">
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand to-brand-light flex items-center justify-center text-white font-bold text-xs shadow-md">
-            SV
+            {getInitials(currentUser.name)}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[13px] font-semibold text-white truncate">Sahil Verma</p>
+            <p className="text-[13px] font-semibold text-white truncate">{currentUser.name}</p>
             <p className="text-[10px] text-white/40 truncate">Premium Plan</p>
           </div>
           <span className="w-2 h-2 bg-accent-green rounded-full shadow-[0_0_6px_rgba(16,185,129,0.5)]" />

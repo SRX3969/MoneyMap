@@ -10,11 +10,13 @@
 
 import type * as ai from "../ai.js";
 import type * as budgets from "../budgets.js";
+import type * as customServer from "../customServer.js";
 import type * as goals from "../goals.js";
 import type * as notifications from "../notifications.js";
 import type * as recurring from "../recurring.js";
 import type * as seed from "../seed.js";
 import type * as transactions from "../transactions.js";
+import type * as users from "../users.js";
 import type * as utils from "../utils.js";
 
 import type {
@@ -26,11 +28,13 @@ import type {
 declare const fullApi: ApiFromModules<{
   ai: typeof ai;
   budgets: typeof budgets;
+  customServer: typeof customServer;
   goals: typeof goals;
   notifications: typeof notifications;
   recurring: typeof recurring;
   seed: typeof seed;
   transactions: typeof transactions;
+  users: typeof users;
   utils: typeof utils;
 }>;
 

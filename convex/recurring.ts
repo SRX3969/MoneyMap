@@ -1,4 +1,4 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query } from "./customServer";
 import { v } from "convex/values";
 import { getUserId } from "./utils";
 

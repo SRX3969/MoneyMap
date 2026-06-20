@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { useQuery, useAction, useMutation } from "convex/react";
+import { useQuery, useAction, useMutation } from "@/hooks/use-convex";
 import { api } from "../../../../convex/_generated/api";
 import { Sparkles, Send, Compass, Trash2, ArrowRight } from "lucide-react";
 

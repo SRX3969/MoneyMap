@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation } from "@/hooks/use-convex";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "@/types";
 import { Bell, Calendar, Sparkles, AlertTriangle, CheckCircle, Check, X } from "lucide-react";

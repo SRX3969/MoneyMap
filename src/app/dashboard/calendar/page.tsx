@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useQuery, useAction } from "convex/react";
+import { useQuery, useAction } from "@/hooks/use-convex";
 import { api } from "../../../../convex/_generated/api";
 import {
   ChevronLeft, ChevronRight, X, Sparkles,
@@ -30,7 +30,7 @@ export default function CalendarView() {
   const getDaysInMonth = () => {
     const firstDayIndex = new Date(year, month, 1).getDay();
     const totalDays = new Date(year, month + 1, 0).getDate();
-    const cells = [];
+    const cells: (Date | null)[] = [];
     for (let i = 0; i < firstDayIndex; i++) cells.push(null);
     for (let d = 1; d <= totalDays; d++) cells.push(new Date(year, month, d));
     return cells;
@@ -61,7 +61,7 @@ export default function CalendarView() {
   };
 
   const getHeatmapGrid = () => {
-    const grid = [];
+    const grid: any[] = [];
     const today = new Date();
     for (let i = 59; i >= 0; i--) {
       const d = new Date(); d.setDate(today.getDate() - i);

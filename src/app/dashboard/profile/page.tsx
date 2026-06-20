@@ -1,16 +1,41 @@
 "use client";
 
-import React, { useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import React, { useState, useEffect } from "react";
+import { useMutation, useQuery } from "@/hooks/use-convex";
 import { api } from "../../../../convex/_generated/api";
-import { Settings, Trash2, Check, User, CreditCard, Shield, Bell, HelpCircle } from "lucide-react";
+import { Settings, Trash2, Check, User, CreditCard, Shield, Bell, HelpCircle, LogOut } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function ProfileSettingsView() {
+  const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [aiSeverity, setAiSeverity] = useState("high");
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+
+  const [currentUser, setCurrentUser] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("moneymap_user");
+      return saved ? JSON.parse(saved) : { name: "Sahil Verma", email: "sahil@moneymap.in" };
+    }
+    return { name: "Sahil Verma", email: "sahil@moneymap.in" };
+  });
+
+  const getInitials = (fullName: string) => {
+    return fullName
+      .split(" ")
+      .map((p) => p[0])
+      .join("")
+      .substring(0, 2)
+      .toUpperCase();
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("moneymap_user");
+    window.dispatchEvent(new Event("moneymap_auth_change"));
+    router.push("/login");
+  };
 
   const clearChatHistory = useMutation(api.ai.clearChatHistory);
   const clearTransactions = useMutation(api.transactions.removeMany);
@@ -26,7 +51,7 @@ export default function ProfileSettingsView() {
       await clearChatHistory();
       for (const b of budgets) await removeBudget({ id: b._id });
       for (const g of goals) await removeGoal({ id: g._id });
-      const txIds = transactions.map((t) => t._id);
+      const txIds = transactions.map((t: any) => t._id);
       if (txIds.length > 0) await clearTransactions({ ids: txIds });
       alert("Workspace reset successfully!");
       setShowResetConfirm(false);
@@ -54,15 +79,24 @@ export default function ProfileSettingsView() {
         {/* User Card */}
         <div className="card p-6 space-y-5 flex flex-col items-center text-center">
           <div className="w-20 h-20 rounded-full bg-gradient-to-br from-brand to-brand-light text-white flex items-center justify-center font-bold text-xl shadow-lg">
-            SV
+            {getInitials(currentUser.name)}
           </div>
           <div>
-            <h3 className="font-bold text-text-primary text-base">Sahil Verma</h3>
-            <p className="text-xs text-text-muted mt-0.5">sahil@moneymap.in</p>
+            <h3 className="font-bold text-text-primary text-base">{currentUser.name}</h3>
+            <p className="text-xs text-text-muted mt-0.5">{currentUser.email}</p>
           </div>
           <span className="px-3 py-1 bg-brand-bg text-brand text-[10px] font-bold rounded-full border border-purple-100 uppercase tracking-wider">
             Premium Plan
           </span>
+
+          <button 
+            onClick={handleSignOut}
+            className="w-full py-2.5 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-text-primary font-bold text-xs rounded-xl transition-all"
+          >
+            <LogOut className="w-4 h-4 text-text-secondary" />
+            <span>Sign Out</span>
+          </button>
+
           <div className="w-full pt-4 border-t border-border grid grid-cols-2 gap-3 text-left">
             <div>
               <span className="text-[10px] text-text-muted font-semibold uppercase">Plan</span>

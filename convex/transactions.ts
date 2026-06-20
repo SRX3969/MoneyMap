@@ -1,4 +1,5 @@
-import { mutation, query, MutationCtx } from "./_generated/server";
+import { MutationCtx } from "./_generated/server";
+import { mutation, query } from "./customServer";
 import { v } from "convex/values";
 import { getUserId } from "./utils";
 
@@ -23,7 +24,7 @@ async function checkBudget(ctx: MutationCtx, userId: string, category: string, d
     )
     .first();
 
-  const budgetsToCheck = [];
+  const budgetsToCheck: any[] = [];
   if (categoryBudget) budgetsToCheck.push(categoryBudget);
   if (globalBudget) budgetsToCheck.push(globalBudget);
 

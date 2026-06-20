@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useQuery } from "convex/react";
+import { useQuery } from "@/hooks/use-convex";
 import { api } from "../../../convex/_generated/api";
 import { Doc } from "@/types";
 import { useDashboard } from "@/context/dashboard-context";

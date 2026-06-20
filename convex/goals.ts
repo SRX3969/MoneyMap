@@ -1,4 +1,4 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query } from "./customServer";
 import { v } from "convex/values";
 import { getUserId } from "./utils";
 
@@ -111,7 +111,7 @@ export const list = query({
       .withIndex("by_userId", (q) => q.eq("userId", userId))
       .collect();
 
-    const enrichedGoals = [];
+    const enrichedGoals: any[] = [];
 
     for (const g of goals) {
       const contributions = await ctx.db

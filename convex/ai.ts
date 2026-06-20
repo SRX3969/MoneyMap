@@ -1,4 +1,5 @@
-import { action, mutation, query } from "./_generated/server";
+import { action } from "./_generated/server";
+import { mutation, query } from "./customServer";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
 import { getUserId } from "./utils";
