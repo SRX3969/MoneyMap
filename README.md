@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📍 MoneyMap
 
-## Getting Started
+MoneyMap is a premium, state-of-the-art Light-Themed Fintech SaaS platform designed to help users track, manage, and optimize their personal finances. With modern typography, curated color palettes, elegant glassmorphism, micro-animations, and AI-powered financial coaching, MoneyMap turns personal finance into a beautiful and interactive experience.
 
-First, run the development server:
+![Dashboard Mockup](/public/dashboard_mockup.png)
 
+---
+
+## 🚀 Key Features
+
+*   **📊 Dynamic Financial Dashboard**
+    *   Real-time overview of current net worth, monthly income, expenses, and savings.
+    *   Interactive transaction drawers and instant summaries.
+*   **💸 Budget Tracking & Forecasting**
+    *   Set monthly budget limits for custom categories.
+    *   Smart forecasting panel showing estimated spending trajectories based on historical patterns.
+*   **🎯 Goal Planning & Celebrations**
+    *   Create and track savings goals with animated progress bars.
+    *   Dynamic confetti celebrations upon goal completion to drive positive financial behavior.
+*   **📈 Rich Analytics & Reports**
+    *   Beautiful interactive Area and Pie charts to visualize cash flow over custom time ranges.
+    *   AI-generated summaries detailing key financial insights, warnings, and spending trends.
+*   **🗓️ Recurring Payments Calendar**
+    *   Stay on top of bills and subscriptions with automated recurring tracking.
+    *   Due-date badges and commitment summaries to prevent late fees.
+*   **🤖 AI Personal Finance Coach**
+    *   An interactive chat interface with pre-suggested quick-prompts.
+    *   Generative, context-aware suggestions for budgeting and saving optimization.
+*   **🔔 Intelligent Notification Center**
+    *   Dynamic dropdown alerts warning of budget overruns, upcoming bills, and achievement milestones.
+
+---
+
+## 🛠️ Technology Stack
+
+*   **Framework**: [Next.js](https://nextjs.org/) (App Router)
+*   **Language**: [TypeScript](https://www.typescriptlang.org/) for robust static typing
+*   **Styling**: Pure CSS combined with TailwindCSS tokens for a premium light-themed design system
+*   **Database & Backend**: [Convex](https://www.convex.dev/) for real-time reactivity and live syncing
+*   **Icons**: [Lucide React](https://lucide.dev/) for sleek, modern iconography
+*   **Animations**: Micro-interactions, custom hover glows, and confetti components for enhanced engagement
+
+---
+
+## 🎨 Design System
+
+MoneyMap is built on a highly polished light-theme design system:
+*   **Harmony Palette**: Curated slate and indigo brand-bg accents, slate-900 for high-contrast primary text, and slate-500/600 for soft secondary context.
+*   **Elevations**: Dynamic glassmorphism layers, soft borders, and floating shadows (`shadow-float`) that respond to user hover actions.
+*   **Micro-interactions**: Smooth transitions on inputs, sidebars, and buttons, giving the interface a premium, responsive feel.
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+*   Node.js (v18 or higher recommended)
+*   npm or bun
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/SRX3969/MoneyMap.git
+cd MoneyMap
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Set up Environment Variables
+Create a `.env.local` file in the root directory and add your Convex deployment details:
+```env
+NEXT_PUBLIC_CONVEX_URL=your_convex_url
+```
+
+### 4. Run the Development Server
+Run Convex in development mode:
+```bash
+npx convex dev
+```
+In another terminal, start the Next.js development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
