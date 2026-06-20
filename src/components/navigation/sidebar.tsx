@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboard } from "@/context/dashboard-context";
+import { Logo } from "@/components/ui/logo";
 import {
   Home,
   Calendar,
@@ -15,8 +16,7 @@ import {
   Sparkles,
   Settings,
   User,
-  Plus,
-  Compass
+  Plus
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -63,15 +63,13 @@ export default function Sidebar() {
   return (
     <aside className="hidden md:flex flex-col w-[280px] sidebar-gradient h-screen sticky top-0 shrink-0 select-none z-40 overflow-hidden">
       
-      {/* Brand Header */}
       <div className="flex items-center gap-3 px-6 py-5 border-b border-white/8 shrink-0">
-        <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center shadow-[0_0_16px_rgba(124,58,237,0.35)]">
-          <Compass className="w-5 h-5 text-white" />
-        </div>
-        <div className="flex flex-col">
-          <span className="font-bold text-white tracking-tight text-[15px]">MoneyMap</span>
-          <span className="text-[10px] font-medium text-white/40 -mt-0.5">AI-Powered Finance</span>
-        </div>
+        <Logo 
+          iconClassName="w-10 h-10" 
+          showText={true} 
+          textClassName="font-extrabold text-white tracking-tight text-[16px]"
+          className="flex items-center gap-3"
+        />
       </div>
 
       {/* User Profile Capsule */}

@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Compass, Sparkles, ArrowRight, Check, AlertCircle, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
+import { Sparkles, ArrowRight, Check, AlertCircle, Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -44,11 +45,8 @@ export default function LoginPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
         {/* Logo */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="flex justify-center mb-8">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="p-2.5 bg-gradient-to-br from-brand to-brand-light text-white rounded-xl shadow-[0_0_16px_rgba(124,58,237,0.25)]">
-              <Compass className="w-6 h-6" />
-            </div>
-            <span className="font-extrabold text-xl tracking-tight text-text-primary">MoneyMap</span>
+          <Link href="/">
+            <Logo iconClassName="w-10 h-10" textClassName="font-extrabold text-xl tracking-tight text-text-primary" />
           </Link>
         </motion.div>
 

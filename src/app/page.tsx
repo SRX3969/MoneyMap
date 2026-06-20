@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Logo } from "@/components/ui/logo";
 import {
   ArrowRight,
-  Compass,
   Sparkles,
   TrendingUp,
   Wallet,
@@ -17,7 +17,10 @@ import {
   Zap,
   BarChart3,
   Brain,
-  CheckCircle
+  CheckCircle,
+  Coffee,
+  Car,
+  CreditCard
 } from "lucide-react";
 
 const FEATURES = [
@@ -88,11 +91,8 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur-xl border-b border-border/50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="p-2 bg-gradient-to-br from-brand to-brand-light text-white rounded-xl shadow-[0_0_12px_rgba(124,58,237,0.2)]">
-              <Compass className="w-5 h-5" />
-            </div>
-            <span className="font-extrabold text-lg tracking-tight text-text-primary">MoneyMap</span>
+          <Link href="/">
+            <Logo />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
@@ -174,56 +174,142 @@ export default function LandingPage() {
               </div>
             </motion.div>
 
-            {/* Right: Dashboard Preview Card */}
-            <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-              className="hidden lg:block">
-              <div className="relative">
-                {/* Decorative glow */}
-                <div className="absolute -inset-4 bg-gradient-to-br from-brand/10 to-accent-blue/10 rounded-[32px] blur-2xl pointer-events-none" />
-                
-                <div className="relative card p-6 space-y-5 border-2 border-purple-100/50 shadow-float">
-                  {/* Mock header */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-text-muted">Good Morning</p>
-                      <p className="text-lg font-bold text-text-primary">Sahil 👋</p>
+            {/* Right: Premium Interactive Dashboard Mockup Showcase */}
+            <motion.div 
+              initial={{ opacity: 0, x: 45 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+              className="hidden lg:block relative"
+            >
+              {/* Main shadow glow */}
+              <div className="absolute -inset-4 bg-gradient-to-br from-brand/10 to-emerald-500/10 rounded-[32px] blur-3xl pointer-events-none" />
+
+              {/* Main Dashboard Card */}
+              <div className="relative card p-6 space-y-5 border-2 border-purple-100/50 shadow-float z-10 hover:shadow-xl transition-all duration-300">
+                {/* Mock header */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[11px] text-text-muted font-medium">Good Morning</p>
+                    <p className="text-lg font-bold text-text-primary tracking-tight">Sahil 👋</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-brand-light text-white flex items-center justify-center text-xs font-extrabold border-2 border-white shadow-md">SV</div>
+                </div>
+
+                {/* Mock KPIs */}
+                <div className="grid grid-cols-2 gap-3.5">
+                  {[
+                    { label: "Net Worth", value: "₹64,420", trend: "+12.4%", up: true },
+                    { label: "Savings Rate", value: "67%", trend: "+4%", up: true },
+                  ].map((kpi) => (
+                    <div key={kpi.label} className="p-4 bg-page-bg rounded-2xl border border-border/80 space-y-1">
+                      <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider">{kpi.label}</p>
+                      <p className="text-xl font-extrabold text-text-primary">{kpi.value}</p>
+                      <span className={`inline-block text-[10px] font-extrabold px-1.5 py-0.5 rounded-md ${kpi.up ? "bg-green-50 text-accent-green" : "bg-red-50 text-accent-red"}`}>
+                        {kpi.trend}
+                      </span>
                     </div>
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-brand-light text-white flex items-center justify-center text-xs font-bold">SV</div>
-                  </div>
+                  ))}
+                </div>
 
-                  {/* Mock KPIs */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {[
-                      { label: "Net Worth", value: "₹64,420", trend: "+12.4%", up: true },
-                      { label: "Savings Rate", value: "67%", trend: "+4%", up: true },
-                    ].map((kpi) => (
-                      <div key={kpi.label} className="p-4 bg-page-bg rounded-2xl border border-border space-y-1.5">
-                        <p className="text-[10px] text-text-muted font-semibold uppercase">{kpi.label}</p>
-                        <p className="text-lg font-extrabold text-text-primary">{kpi.value}</p>
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${kpi.up ? "bg-green-50 text-accent-green" : "bg-red-50 text-accent-red"}`}>
-                          {kpi.trend}
-                        </span>
-                      </div>
-                    ))}
+                {/* SVG Area Chart */}
+                <div className="h-32 bg-page-bg rounded-2xl border border-border/80 p-3.5 relative overflow-hidden flex flex-col justify-between">
+                  <div className="flex items-center justify-between text-[10px] text-text-muted font-semibold uppercase">
+                    <span>Cashflow (Income vs Expenses)</span>
+                    <span className="text-brand font-bold">June 2026</span>
                   </div>
+                  
+                  {/* Real SVG Area Line Chart */}
+                  <svg className="w-full h-20 mt-1" viewBox="0 0 300 80" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="chartGlow" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.25" />
+                        <stop offset="100%" stopColor="#7C3AED" stopOpacity="0.0" />
+                      </linearGradient>
+                    </defs>
+                    {/* Fill */}
+                    <path
+                      d="M 0 80 Q 50 20 100 50 T 200 15 T 300 30 L 300 80 L 0 80 Z"
+                      fill="url(#chartGlow)"
+                    />
+                    {/* Stroke */}
+                    <path
+                      d="M 0 80 Q 50 20 100 50 T 200 15 T 300 30"
+                      fill="none"
+                      stroke="#7C3AED"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                    {/* Highlight Dot */}
+                    <circle cx="200" cy="15" r="4.5" fill="#7C3AED" stroke="white" strokeWidth="1.5" />
+                  </svg>
+                </div>
 
-                  {/* Mock chart placeholder */}
-                  <div className="h-24 bg-page-bg rounded-2xl border border-border flex items-end justify-center gap-1.5 px-4 pb-4">
-                    {[40, 65, 45, 70, 55, 85, 60, 75, 50, 90, 70, 80].map((h, i) => (
-                      <div key={i} className="flex-1 rounded-t-md bg-gradient-to-t from-brand to-brand-light/60" style={{ height: `${h}%` }} />
-                    ))}
-                  </div>
-
-                  {/* Mock AI insight */}
-                  <div className="p-4 bg-gradient-to-br from-[#F5F3FF] to-[#EEF2FF] rounded-2xl border border-purple-100 flex items-start gap-3">
-                    <Sparkles className="w-5 h-5 text-brand shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs font-bold text-text-primary">Great job! 🎉</p>
-                      <p className="text-[11px] text-text-secondary mt-0.5">Food spending decreased by 12% this month.</p>
-                    </div>
+                {/* Mock AI insight */}
+                <div className="p-3.5 bg-gradient-to-br from-[#F5F3FF] to-[#EEF2FF] rounded-2xl border border-purple-100 flex items-start gap-3">
+                  <Sparkles className="w-5 h-5 text-brand shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-bold text-text-primary">Great job! 🎉</p>
+                    <p className="text-[11px] text-text-secondary mt-0.5">Food spending decreased by 12% this month.</p>
                   </div>
                 </div>
               </div>
+
+              {/* Overlapping Card 1: Floating Recent Activity */}
+              <motion.div 
+                whileHover={{ y: -6, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="absolute -bottom-10 -left-8 w-64 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-border shadow-float z-20 cursor-default"
+              >
+                <p className="text-xs font-bold text-text-primary mb-3">Recent Transactions</p>
+                <div className="space-y-2.5">
+                  {[
+                    { icon: Coffee, name: "Starbucks Coffee", cost: "-₹280", tag: "Food", color: "text-amber-600 bg-amber-50" },
+                    { icon: Car, name: "Uber Ride", cost: "-₹450", tag: "Travel", color: "text-blue-600 bg-blue-50" },
+                    { icon: CreditCard, name: "Salary", cost: "+₹75,000", tag: "Income", color: "text-emerald-600 bg-emerald-50" },
+                  ].map((tx, idx) => {
+                    const TxIcon = tx.icon;
+                    return (
+                      <div key={idx} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <div className={`w-8 h-8 rounded-lg ${tx.color} flex items-center justify-center`}>
+                            <TxIcon className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <p className="text-[11px] font-bold text-text-primary">{tx.name}</p>
+                            <span className="text-[9px] text-text-muted">{tx.tag}</span>
+                          </div>
+                        </div>
+                        <span className={`text-xs font-extrabold ${tx.cost.startsWith("+") ? "text-accent-green" : "text-text-primary"}`}>
+                          {tx.cost}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+
+              {/* Overlapping Card 2: Savings Goal tracker */}
+              <motion.div 
+                whileHover={{ y: -6, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="absolute -top-8 -right-8 w-56 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-border shadow-float z-20 cursor-default"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-brand animate-pulse" />
+                    <p className="text-[11px] font-bold text-text-primary">Savings Target</p>
+                  </div>
+                  <span className="text-[10px] font-extrabold text-brand bg-brand-bg px-1.5 py-0.5 rounded-md">82%</span>
+                </div>
+                <p className="text-sm font-extrabold text-text-primary">MacBook Pro M4</p>
+                <div className="w-full bg-border h-2 rounded-full mt-2.5 overflow-hidden">
+                  <div className="bg-gradient-to-r from-brand to-brand-light h-full rounded-full" style={{ width: "82%" }} />
+                </div>
+                <div className="flex justify-between items-center mt-2 text-[9px] text-text-muted font-bold">
+                  <span>₹1,23,000 saved</span>
+                  <span>Target: ₹1,50,000</span>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
@@ -382,12 +468,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-border bg-white">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2.5">
-            <div className="p-1.5 bg-gradient-to-br from-brand to-brand-light text-white rounded-lg">
-              <Compass className="w-4 h-4" />
-            </div>
-            <span className="font-bold text-text-primary text-sm">MoneyMap</span>
-          </div>
+          <Logo iconClassName="w-7 h-7" textClassName="font-bold text-text-primary text-sm" />
           <p className="text-xs text-text-muted">
             © {new Date().getFullYear()} MoneyMap. Map Every Rupee. Built with ❤️ for India.
           </p>
