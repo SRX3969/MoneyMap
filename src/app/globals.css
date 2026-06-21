@@ -1,23 +1,24 @@
-@import "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap";
 @import "tailwindcss";
 
 /* ============================================
    MONEYMAP — PREMIUM FINTECH DESIGN SYSTEM
-   Light theme with dark navy sidebar
+   Warm background with royal blue brand accents
    ============================================ */
 
 @theme {
-  --color-brand: #7C3AED;
-  --color-brand-light: #9333EA;
-  --color-brand-bg: #F5F3FF;
-  --color-accent-blue: #2563EB;
-  --color-accent-green: #10B981;
-  --color-accent-orange: #F59E0B;
+  --color-brand: #0057FF;
+  --color-brand-light: #3B82F6;
+  --color-brand-bg: #F0F4FF;
+  --color-accent-blue: #0057FF;
+  --color-accent-green: #00D18F;
+  --color-accent-orange: #FF9F00;
   --color-accent-red: #EF4444;
   --color-accent-pink: #EC4899;
-  --color-sidebar: #04142C;
-  --color-sidebar-dark: #021124;
-  --color-page-bg: #F6F8FC;
+  --color-accent-gold: #D4AF37;
+  --color-sidebar: #0B132B;
+  --color-sidebar-dark: #070B19;
+  --color-page-bg: #FAFAF8;
   --color-card: #FFFFFF;
   --color-text-primary: #0F172A;
   --color-text-secondary: #64748B;
@@ -29,19 +30,19 @@
 }
 
 :root {
-  --background: #F6F8FC;
+  --background: #FAFAF8;
   --foreground: #0F172A;
   --card: #FFFFFF;
   --card-foreground: #0F172A;
   --border: #E5E7EB;
-  --ring: #7C3AED;
-  --radius: 20px;
+  --ring: #0057FF;
+  --radius: 24px;
 }
 
 body {
-  background-color: #F6F8FC;
+  background-color: #FAFAF8;
   color: #0F172A;
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter Tight", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -63,36 +64,36 @@ body {
 .card {
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
-  border-radius: 20px;
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card:hover {
-  box-shadow: 0 15px 50px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
 }
 
 .card-lift:hover {
   transform: translateY(-6px);
-  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
 }
 
 /* ============================================
    BUTTON SYSTEM
    ============================================ */
 .btn-primary {
-  background: linear-gradient(135deg, #7C3AED, #9333EA);
+  background: linear-gradient(135deg, #0057FF, #3B82F6);
   color: white;
   border: none;
   border-radius: 14px;
   font-weight: 600;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 4px 14px rgba(0, 87, 255, 0.25);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.35);
+  box-shadow: 0 8px 25px rgba(0, 87, 255, 0.35);
 }
 
 .btn-primary:active {
@@ -132,12 +133,12 @@ body {
    SIDEBAR GRADIENT
    ============================================ */
 .sidebar-gradient {
-  background: linear-gradient(180deg, #071B39 0%, #021124 100%);
+  background: linear-gradient(180deg, #0B132B 0%, #070B19 100%);
 }
 
 .sidebar-active {
-  background: linear-gradient(135deg, #7C3AED, #9333EA);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  background: linear-gradient(135deg, #0057FF, #3B82F6);
+  box-shadow: 0 4px 12px rgba(0, 87, 255, 0.3);
 }
 
 /* ============================================

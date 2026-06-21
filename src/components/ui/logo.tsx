@@ -23,16 +23,16 @@ export function Logo({
       >
         <defs>
           <linearGradient id="logoBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#7C3AED" />
-            <stop offset="100%" stopColor="#4F46E5" />
+            <stop offset="0%" stopColor="#0057FF" />
+            <stop offset="100%" stopColor="#0046CC" />
           </linearGradient>
           <linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" />
             <stop offset="100%" stopColor="#E0E7FF" />
           </linearGradient>
-          <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#34D399" />
-            <stop offset="100%" stopColor="#059669" />
+          <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#D4AF37" />
+            <stop offset="100%" stopColor="#AA8410" />
           </linearGradient>
         </defs>
         
@@ -52,17 +52,17 @@ export function Logo({
           strokeLinejoin="round"
         />
         
-        {/* Rising Trend Arrow intersecting the map (emerald green) */}
+        {/* Rising Trend Arrow intersecting the map (gold) */}
         <path
           d="M58 74 L74 58 L74 48"
-          stroke="url(#nodeGrad)"
+          stroke="url(#goldGrad)"
           strokeWidth="9"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         
-        {/* The target map marker / growing node */}
-        <circle cx="74" cy="48" r="6" fill="#34D399" />
+        {/* The target map marker / growing node (mint success) */}
+        <circle cx="74" cy="48" r="6" fill="#00D18F" />
       </svg>
       {showText && <span className={textClassName}>MoneyMap</span>}
     </div>
