@@ -257,7 +257,7 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          <div className="bg-white p-8 rounded-[24px] border border-border shadow-float">
+          <div className="bg-white p-6 sm:p-8 rounded-[24px] border border-border shadow-float">
             
             {/* Page Headers */}
             <div className="mb-8">
@@ -428,7 +428,7 @@ export default function LoginPage() {
             </div>
 
             {/* Alternative auth options */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button 
                 type="button" 
                 onClick={handleGuestAccess}
