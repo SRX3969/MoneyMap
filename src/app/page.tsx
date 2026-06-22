@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/ui/logo";
@@ -13,566 +13,480 @@ import {
   Shield,
   Target,
   ChevronRight,
-  Star,
-  Zap,
-  BarChart3,
-  Brain,
   Lock,
   LineChart,
   Play,
   ArrowUpRight,
-  Activity,
-  Users
+  Activity
 } from "lucide-react";
-
-const FEATURES = [
-  {
-    icon: Brain,
-    title: "AI Financial Coach",
-    description: "Receive personalized wealth recommendations and spending insights powered by advanced AI models.",
-    linkText: "Explore AI →",
-  },
-  {
-    icon: Wallet,
-    title: "Wealth Dashboard",
-    description: "Consolidate and view all assets, cash reserves, and savings plans in one single, high-fidelity screen.",
-    linkText: "See Dashboard →",
-  },
-  {
-    icon: Activity,
-    title: "Smart Insights",
-    description: "Detect anomalies, optimize subscriptions, and unlock tax-saving allocation options automatically.",
-    linkText: "Discover Insights →",
-  },
-  {
-    icon: Target,
-    title: "Goal Planning",
-    description: "Build custom wealth milestones, model compounding growth, and track timelines with active forecasts.",
-    linkText: "Plan Goals →",
-  },
-  {
-    icon: LineChart,
-    title: "Investment Visibility",
-    description: "Log and track returns across mutual funds, stocks, fixed deposits, and cash in a single unified ledger.",
-    linkText: "Track Growth →",
-  },
-  {
-    icon: PieChart,
-    title: "Cash Flow Intelligence",
-    description: "Understand spending velocity and optimize daily liquidity with automated forecasting charts.",
-    linkText: "See Intelligence →",
-  },
-];
-
-const TRUST_ITEMS = [
-  {
-    icon: Lock,
-    title: "End-to-End Encryption",
-    description: "Your financial logs are encrypted locally and stored in sandbox isolation."
-  },
-  {
-    icon: Shield,
-    title: "Privacy-First Architecture",
-    description: "Zero third-party integrations. Your financial life remains entirely your own."
-  },
-  {
-    icon: Sparkles,
-    title: "AI-Powered Wealth Intelligence",
-    description: "Actionable recommendations that help you optimize yield over simple tracking."
-  },
-  {
-    icon: Activity,
-    title: "Reliable Infrastructure",
-    description: "Built on a modern sandboxed database ensuring data integrity at scale."
-  }
-];
-
-const STATS = [
-  { value: "₹45Cr+", label: "Assets Under Intelligence" },
-  { value: "10,000+", label: "Financial Journeys Guided" },
-  { value: "4.9★", label: "User Satisfaction Score" },
-  { value: "99.99%", label: "API & Sync Uptime" },
-];
-
-const TESTIMONIALS = [
-  { 
-    name: "Priya Sharma", 
-    role: "Freelance Designer", 
-    city: "Mumbai", 
-    text: "Spreadsheets always felt like looking backward. MoneyMap's wealth intelligence shows me exactly where my cash flow is heading and how to optimize it." 
-  },
-  { 
-    name: "Rohan Gupta", 
-    role: "Software Engineer", 
-    city: "Bangalore", 
-    text: "Finally, a financial tool that understands the modern Indian investor. The AI recommendations alone saved me thousands in tax optimization." 
-  },
-  { 
-    name: "Sneha Sen", 
-    role: "Startup Founder", 
-    city: "Pune", 
-    text: "MoneyMap has given me the confidence to make major investment decisions with complete wealth visibility. The cash flow interface is beautiful." 
-  },
-];
 
 const SHOWCASE_TABS = [
   {
     id: "networth",
-    label: "Net Worth tracking",
-    title: "Consolidated Wealth Visibility",
-    desc: "Aggregate your cash flow, investments, and assets into a single visual ledger. Track long-term valuation shifts and compound rate growth dynamically.",
+    label: "Consolidated Wealth",
+    title: "All assets in one place",
+    desc: "Aggregate your savings accounts, mutual funds, gold, and properties into a single financial ledger. Track long-term valuation shifts and net growth without third-party sync risk.",
     metricValue: "₹64,42,000",
-    metricLabel: "Active Assets Under Intelligence",
-    chartColor: "#0057FF"
+    metricLabel: "Consolidated Net Worth",
   },
   {
-    id: "coach",
-    label: "AI Wealth Coach",
-    title: "Decisions Guided by Intelligence",
-    desc: "Receive actionable advisories on high liquidity buffers, tax saving limits, and mutual fund shifts to maximize capital efficiency.",
-    metricValue: "₹45,000",
-    metricLabel: "Recommended Mutual Fund Allocation",
-    chartColor: "#00D18F"
+    id: "spending",
+    label: "Spending Analysis",
+    title: "Understand cash velocity",
+    desc: "Categorize monthly expenses automatically and track your true burn rate. See where capital leaks occur and establish realistic boundaries for recurring categories.",
+    metricValue: "₹48,250",
+    metricLabel: "Average Monthly Burn",
   },
   {
     id: "forecast",
-    label: "Cash Flow Forecasting",
-    title: "Model Your Compounding Future",
-    desc: "Simulate cash flow curves 12 months out based on historic spending velocity, upcoming recurring transfers, and custom goals.",
+    label: "Savings Projections",
+    title: "Model your compounding future",
+    desc: "Simulate cash flow curves 12 months out based on historic savings rates, upcoming recurring transfers, and custom milestones. See the impact of compounding over the long term.",
     metricValue: "₹1,50,000",
-    metricLabel: "Projected Liquidity for Q3",
-    chartColor: "#D4AF37"
+    metricLabel: "Projected Q3 Savings Target",
   }
 ];
 
 export default function LandingPage() {
   const [activeTab, setActiveTab] = useState("networth");
-  const [tiltX, setTiltX] = useState(0);
-  const [tiltY, setTiltY] = useState(0);
+  const [currentUser, setCurrentUser] = useState<{ id: string; name: string } | null>(null);
 
-  const handleTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left - width / 2;
-    const mouseY = e.clientY - rect.top - height / 2;
-    const rX = -(mouseY / height) * 10;
-    const rY = (mouseX / width) * 10;
-    setTiltX(rX);
-    setTiltY(rY);
-  };
-
-  const handleTiltLeave = () => {
-    setTiltX(0);
-    setTiltY(0);
-  };
+  useEffect(() => {
+    const checkUser = () => {
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("moneymap_user");
+        if (saved) {
+          try {
+            setCurrentUser(JSON.parse(saved));
+          } catch (e) {}
+        } else {
+          setCurrentUser(null);
+        }
+      }
+    };
+    checkUser();
+    window.addEventListener("moneymap_auth_change", checkUser);
+    return () => window.removeEventListener("moneymap_auth_change", checkUser);
+  }, []);
 
   const activeTabContent = SHOWCASE_TABS.find((t) => t.id === activeTab) || SHOWCASE_TABS[0];
 
   return (
     <div className="min-h-screen bg-page-bg text-text-primary overflow-x-hidden selection:bg-brand selection:text-white font-sans">
       
-      {/* Sticky Header Navigation */}
-      <nav className="fixed top-0 inset-x-0 z-50 bg-[#FAFAF8]/80 backdrop-blur-md border-b border-border/50">
+      {/* Navigation Header */}
+      <nav className="fixed top-0 inset-x-0 z-50 bg-page-bg/85 backdrop-blur-md border-b border-border/40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/">
-            <Logo textClassName="font-bold text-lg tracking-tight text-text-primary" />
+            <Logo textClassName="font-semibold text-base tracking-tight text-[#111111]" />
           </Link>
 
-          {/* Menu items */}
+          {/* Minimal Links */}
           <div className="hidden md:flex items-center gap-8">
-            {["Product", "Solutions", "Pricing", "Resources"].map((item) => (
-              <a 
-                key={item} 
-                href={`#${item.toLowerCase()}`}
-                className="text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors tracking-wider uppercase"
-              >
-                {item}
-              </a>
-            ))}
+            <a href="#product" className="text-xs font-medium text-text-secondary hover:text-[#111111] transition-colors tracking-wide">Product</a>
+            <a href="#features" className="text-xs font-medium text-text-secondary hover:text-[#111111] transition-colors tracking-wide">Features</a>
+            <a href="#pricing" className="text-xs font-medium text-text-secondary hover:text-[#111111] transition-colors tracking-wide">Pricing</a>
+            <a href="#about" className="text-xs font-medium text-text-secondary hover:text-[#111111] transition-colors tracking-wide">About</a>
           </div>
 
-          {/* CTAs */}
+          {/* Auth Actions */}
           <div className="flex items-center gap-4">
-            <Link href="/login" className="text-xs font-bold text-text-secondary hover:text-text-primary transition-colors uppercase tracking-wider">
-              Sign In
-            </Link>
-            <Link href="/login?mode=signup" className="btn-primary px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md">
-              Get Started <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            {currentUser ? (
+              <>
+                <Link href="/dashboard" className="text-xs font-semibold text-text-secondary hover:text-[#111111] transition-colors">
+                  Go to Dashboard
+                </Link>
+                <button 
+                  onClick={() => {
+                    localStorage.removeItem("moneymap_user");
+                    window.dispatchEvent(new Event("moneymap_auth_change"));
+                  }}
+                  className="btn-secondary px-4 py-2 text-xs font-medium"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="text-xs font-semibold text-text-secondary hover:text-[#111111] transition-colors">
+                  Sign In
+                </Link>
+                <Link href="/login?mode=signup" className="btn-primary px-4 py-2 text-xs font-semibold">
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-24 md:pt-44 md:pb-36 px-6">
-        {/* Soft radial glow backing */}
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-brand/3 rounded-full blur-[140px] pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+      <section id="product" className="relative pt-32 pb-20 md:pt-44 md:pb-28 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
-            {/* Hero Left Content */}
-            <div className="lg:col-span-6 space-y-8">
-              {/* Badge tag */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#F0F4FF] border border-[#0057FF]/10 rounded-full">
-                <Sparkles className="w-3.5 h-3.5 text-brand fill-brand/10" />
-                <span className="text-[10px] font-bold text-brand uppercase tracking-widest">Built For Modern Indian Wealth</span>
-              </div>
-
-              <h1 className="text-4xl md:text-[54px] font-extrabold leading-[1.1] tracking-tight text-text-primary">
-                One Place To Understand <br />
-                <span className="bg-gradient-to-r from-brand via-[#2563EB] to-[#00D18F] bg-clip-text text-transparent">
-                  Your Entire Financial Life.
-                </span>
+            {/* Left Content Column */}
+            <div className="lg:col-span-5 space-y-6">
+              <span className="text-xs font-bold text-brand uppercase tracking-wider block">
+                Financial Clarity For Modern India
+              </span>
+              
+              <h1 className="text-4xl md:text-[50px] font-extrabold leading-[1.08] tracking-tight text-[#111111]">
+                Understand <br className="hidden md:inline" /> Every Rupee.
               </h1>
-
-              <p className="text-base md:text-lg text-text-secondary leading-relaxed max-w-xl font-medium">
-                MoneyMap integrates wealth intelligence, cash flow forecasting, investment tracking, and AI-powered recommendations into a single, cohesive financial command center for ambitious professionals.
+              
+              <p className="text-base text-text-secondary leading-relaxed max-w-md font-normal">
+                MoneyMap brings together your spending, savings, investments, and net worth into one precise view. Built for individuals seeking clarity and long-term control over their wealth.
               </p>
 
-              <div className="flex flex-wrap items-center gap-4 pt-2">
-                <Link 
-                  href="/login?mode=signup"
-                  className="btn-primary px-8 py-4 rounded-xl text-xs uppercase tracking-widest flex items-center gap-2"
-                >
-                  Get Started Free <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link 
-                  href="#showcase"
-                  className="btn-secondary px-6 py-4 rounded-xl text-xs uppercase tracking-widest flex items-center gap-2 border border-border bg-white"
-                >
-                  <Play className="w-4 h-4 fill-text-primary text-text-primary" /> Watch Demo
-                </Link>
+              <div className="flex items-center gap-3 pt-2">
+                {currentUser ? (
+                  <Link href="/dashboard" className="btn-primary px-6 py-3 text-xs uppercase tracking-wider font-semibold flex items-center gap-1.5">
+                    Go to Dashboard <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                ) : (
+                  <>
+                    <Link href="/login?mode=signup" className="btn-primary px-6 py-3 text-xs uppercase tracking-wider font-semibold flex items-center gap-1.5">
+                      Get Started Free <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                    <a href="#showcase" className="btn-secondary px-5 py-3 text-xs uppercase tracking-wider font-semibold flex items-center gap-1.5">
+                      <Play className="w-3.5 h-3.5 fill-text-primary text-text-primary" /> See How It Works
+                    </a>
+                  </>
+                )}
               </div>
-
-              {/* Social Proof metrics */}
-              <div className="pt-6 border-t border-border/80 flex items-center gap-4">
-                <div className="flex -space-x-2.5">
-                  {["PS", "RG", "AD", "MK"].map((initials, i) => (
-                    <div key={i} className="w-8 h-8 rounded-full bg-brand-light text-white flex items-center justify-center text-[9px] font-extrabold border-2 border-white shadow-sm">
-                      {initials}
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <p className="text-xs text-text-secondary font-bold">Trusted by 10,000+ ambitious users in India</p>
-                </div>
-              </div>
+              
+              <p className="text-[11px] text-text-muted font-medium pt-3 flex items-center gap-1.5">
+                <Shield className="w-3.5 h-3.5 text-brand" /> Private sandboxed local storage. No data selling.
+              </p>
             </div>
 
-            {/* Hero Right Mockup with 3D Parallax Tilt */}
-            <div className="lg:col-span-6 hidden lg:block">
-              <motion.div 
-                initial={{ opacity: 0, x: 30, rotateX: 0, rotateY: 0 }} 
-                animate={{ opacity: 1, x: 0, rotateX: tiltX, rotateY: tiltY }} 
-                transition={{
-                  x: { duration: 0.8, ease: "easeOut", delay: 0.1 },
-                  opacity: { duration: 0.8, ease: "easeOut", delay: 0.1 },
-                  rotateX: { type: "spring", stiffness: 220, damping: 22 },
-                  rotateY: { type: "spring", stiffness: 220, damping: 22 }
-                }}
-                onMouseMove={handleTiltMove}
-                onMouseLeave={handleTiltLeave}
-                style={{ transformStyle: "preserve-3d", perspective: 1200 }}
-                className="relative cursor-pointer"
-              >
-                {/* Visual glow backdrop */}
-                <div className="absolute -inset-4 bg-gradient-to-br from-brand/5 to-accent-green/5 rounded-[32px] blur-3xl pointer-events-none" />
-
-                {/* Main Dashboard Card */}
-                <div 
-                  style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}
-                  className="relative card p-6 space-y-5 border border-border shadow-md"
-                >
+            {/* Right Product Mockup Column */}
+            <div className="lg:col-span-7">
+              <div className="bg-white rounded-xl border border-border shadow-card overflow-hidden">
+                {/* Browser bar */}
+                <div className="bg-[#F3F4F6]/50 border-b border-border/80 px-4 py-3 flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#E5E7EB]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#E5E7EB]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#E5E7EB]" />
+                  <div className="h-5 w-40 bg-white rounded border border-border/40 text-[9px] text-text-muted flex items-center justify-center mx-auto tracking-wide font-mono select-none">
+                    moneymap.in/dashboard
+                  </div>
+                </div>
+                
+                {/* Simulated Dashboard content */}
+                <div className="p-6 space-y-6 bg-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider">Financial Intelligence Command</p>
-                      <p className="text-lg font-extrabold text-text-primary tracking-tight mt-0.5">Good Morning, Sahil 👋</p>
+                      <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider">Financial Overview</p>
+                      <p className="text-base font-bold text-[#111111] mt-0.5">Good Morning, Sahil</p>
                     </div>
-                    <div className="w-9 h-9 rounded-full bg-brand text-white flex items-center justify-center text-xs font-extrabold shadow-md">SV</div>
+                    <span className="text-[10px] font-bold text-accent-green bg-green-50 px-2 py-0.5 rounded border border-green-100">Live Ledger</span>
                   </div>
 
-                  {/* Net Worth KPIs */}
-                  <div className="grid grid-cols-2 gap-3.5">
-                    <div className="p-4 bg-page-bg rounded-2xl border border-border/60">
-                      <p className="text-[9px] text-text-muted font-bold uppercase tracking-widest">Net Worth</p>
-                      <p className="text-xl font-extrabold text-text-primary mt-1">₹64,42,000</p>
-                      <span className="inline-block text-[9px] font-bold text-accent-green bg-green-50 px-1.5 py-0.5 rounded-md mt-1.5">+12.4% this year</span>
+                  {/* KPIs */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="p-4 bg-page-bg rounded-lg border border-border/60">
+                      <p className="text-[9px] text-text-secondary font-semibold uppercase tracking-wider">Net Worth</p>
+                      <p className="text-lg font-bold text-[#111111] mt-1">₹64,42,000</p>
+                      <span className="text-[9px] text-accent-green font-medium">+12.4%</span>
                     </div>
-                    <div className="p-4 bg-page-bg rounded-2xl border border-border/60">
-                      <p className="text-[9px] text-text-muted font-bold uppercase tracking-widest">Savings Velocity</p>
-                      <p className="text-xl font-extrabold text-text-primary mt-1">67%</p>
-                      <span className="inline-block text-[9px] font-bold text-[#D4AF37] bg-amber-50 px-1.5 py-0.5 rounded-md mt-1.5">Top 5% efficiency</span>
+                    <div className="p-4 bg-page-bg rounded-lg border border-border/60">
+                      <p className="text-[9px] text-text-secondary font-semibold uppercase tracking-wider">Monthly Expenses</p>
+                      <p className="text-lg font-bold text-[#111111] mt-1">₹48,250</p>
+                      <span className="text-[9px] text-accent-red font-medium">-5.1%</span>
+                    </div>
+                    <div className="p-4 bg-page-bg rounded-lg border border-border/60">
+                      <p className="text-[9px] text-text-secondary font-semibold uppercase tracking-wider">Savings Rate</p>
+                      <p className="text-lg font-bold text-[#111111] mt-1">67%</p>
+                      <span className="text-[9px] text-[#0F62FE] font-medium">Optimal</span>
                     </div>
                   </div>
 
-                  {/* Area Chart Vector */}
-                  <div className="h-28 bg-page-bg rounded-2xl border border-border/60 p-3.5 flex flex-col justify-between overflow-hidden">
-                    <div className="flex items-center justify-between text-[9px] text-text-muted font-bold uppercase tracking-wider">
-                      <span>Liquidity Curve (Income vs Spend)</span>
-                      <span className="text-brand">Compounding</span>
+                  {/* Cash Flow Line Chart Vector */}
+                  <div className="h-28 bg-page-bg rounded-lg border border-border/60 p-4 flex flex-col justify-between overflow-hidden">
+                    <div className="flex items-center justify-between text-[9px] text-text-muted font-semibold">
+                      <span>MONTHLY INCOME VS SPENDING TREND</span>
+                      <span className="text-[#0F62FE] font-bold">SAVINGS TARGET ACTIVE</span>
                     </div>
-                    <svg className="w-full h-14 mt-1" viewBox="0 0 300 80" preserveAspectRatio="none">
-                      <defs>
-                        <linearGradient id="glowBrand" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#0057FF" stopOpacity="0.18" />
-                          <stop offset="100%" stopColor="#0057FF" stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M 0 80 Q 50 15 100 45 T 200 10 T 300 20 L 300 80 L 0 80 Z" fill="url(#glowBrand)" />
-                      <path d="M 0 80 Q 50 15 100 45 T 200 10 T 300 20" fill="none" stroke="#0057FF" strokeWidth="2.5" strokeLinecap="round" />
-                      <circle cx="200" cy="10" r="4.5" fill="#00D18F" stroke="white" strokeWidth="1.5" />
+                    <svg className="w-full h-12 mt-1" viewBox="0 0 300 80" preserveAspectRatio="none">
+                      <path d="M 0 65 Q 50 15 100 45 T 200 10 T 300 20" fill="none" stroke="#0F62FE" strokeWidth="2" strokeLinecap="round" />
+                      <circle cx="200" cy="10" r="3.5" fill="#059669" stroke="white" strokeWidth="1" />
                     </svg>
                   </div>
-
-                  {/* Advisor Insight */}
-                  <div className="p-3.5 bg-gradient-to-br from-[#F0F4FF] to-white rounded-2xl border border-[#0057FF]/10 flex items-start gap-3">
-                    <Sparkles className="w-4 h-4 text-brand shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs font-bold text-text-primary">Wealth Advisory Alert</p>
-                      <p className="text-[10px] text-text-secondary mt-0.5">High liquidity detected. Relocate ₹45,000 to Mutual Funds to maintain 14.2% projected yield.</p>
-                    </div>
-                  </div>
                 </div>
-
-                {/* Overlapping Card 1: Floating Activity (left bottom) */}
-                <motion.div 
-                  whileHover={{ y: -6, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 280, damping: 20 }}
-                  style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}
-                  className="absolute -bottom-8 -left-8 w-60 bg-white p-4 rounded-2xl border border-border shadow-lg z-20 cursor-default"
-                >
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2.5">Asset Movements</p>
-                  <div className="space-y-2">
-                    {[
-                      { label: "Salary Allocation", amt: "+₹1,50,000", color: "text-accent-green" },
-                      { label: "Equity Investments", amt: "-₹35,000", color: "text-text-primary" }
-                    ].map((item, idx) => (
-                      <div key={idx} className="flex justify-between items-center text-xs">
-                        <span className="font-semibold text-text-secondary">{item.label}</span>
-                        <span className={`font-bold ${item.color}`}>{item.amt}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-
-                {/* Overlapping Card 2: Savings Goal (right top) */}
-                <motion.div 
-                  whileHover={{ y: -6, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 280, damping: 20 }}
-                  style={{ transform: "translateZ(40px)", transformStyle: "preserve-3d" }}
-                  className="absolute -top-8 -right-8 w-56 bg-white p-4 rounded-2xl border border-border shadow-lg z-20 cursor-default"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-wider">Goal Milestone</span>
-                    <span className="text-[9px] font-extrabold text-[#D4AF37] bg-amber-50 px-1.5 py-0.5 rounded">82%</span>
-                  </div>
-                  <p className="text-xs font-bold text-text-primary">Emergency Reserve Fund</p>
-                  <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2.5 overflow-hidden">
-                    <div className="bg-[#D4AF37] h-full rounded-full" style={{ width: "82%" }} />
-                  </div>
-                </motion.div>
-              </motion.div>
+              </div>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* Trust & Infrastructure Section */}
-      <section className="py-20 border-t border-border bg-[#FAFAF8] px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-xl mx-auto mb-16">
-            <h2 className="text-xs font-bold tracking-widest text-text-muted uppercase">Security & Verification</h2>
-            <p className="text-xl md:text-2xl font-bold tracking-tight text-text-primary mt-2">
-              Trusted by Ambitious Indians to Build Wealth Smarter
+      {/* Editorial Trust Columns */}
+      <section className="py-12 bg-white border-t border-b border-border">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="space-y-2">
+            <h4 className="text-sm font-bold text-[#111111] flex items-center gap-2">
+              <Lock className="w-4 h-4 text-brand" /> End-to-End Local Encryption
+            </h4>
+            <p className="text-xs text-text-secondary leading-relaxed">
+              Your financial transaction data remains sandboxed. We encrypt configurations locally with zero third-party leakage.
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {TRUST_ITEMS.map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div key={idx} className="space-y-3 bg-white p-6 rounded-2xl border border-border/70 hover:shadow-sm transition-shadow">
-                  <div className="w-10 h-10 rounded-xl bg-brand-bg flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-brand" />
-                  </div>
-                  <h3 className="text-sm font-bold text-text-primary tracking-tight">{item.title}</h3>
-                  <p className="text-xs text-text-secondary leading-relaxed">{item.description}</p>
-                </div>
-              );
-            })}
+          <div className="space-y-2 md:border-l md:border-border/60 md:pl-8">
+            <h4 className="text-sm font-bold text-[#111111] flex items-center gap-2">
+              <Shield className="w-4 h-4 text-brand" /> Privacy-First Architecture
+            </h4>
+            <p className="text-xs text-text-secondary leading-relaxed">
+              No advertising models, no spam calls, and no selling of user profiles. The product is sustained by honest, clear subscriptions.
+            </p>
+          </div>
+          <div className="space-y-2 md:border-l md:border-border/60 md:pl-8">
+            <h4 className="text-sm font-bold text-[#111111] flex items-center gap-2">
+              <Activity className="w-4 h-4 text-brand" /> Honest Ledger Logic
+            </h4>
+            <p className="text-xs text-text-secondary leading-relaxed">
+              Transactions, categories, and forecasts are calculated transparently using solid mathematical models for actual clarity.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Large Statistics Section */}
-      <section className="py-20 border-y border-border bg-white px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {STATS.map((stat, idx) => (
-              <div key={idx} className="text-center space-y-1">
-                <p className="text-3xl md:text-5xl font-extrabold text-text-primary tracking-tight">{stat.value}</p>
-                <p className="text-xs font-bold text-text-secondary uppercase tracking-widest mt-1.5">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid Section */}
-      <section id="product" className="py-24 md:py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-20 space-y-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F0F4FF] border border-[#0057FF]/10 rounded-full text-[10px] font-bold text-brand uppercase tracking-wider">
-              <Zap className="w-3 h-3 text-brand" /> Wealth Intelligence
-            </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-text-primary leading-tight">
-              Designed to Control Your Financial Future
+      {/* Asymmetrical Custom Features Section */}
+      <section id="features" className="py-24 space-y-32 max-w-7xl mx-auto px-6">
+        
+        {/* Feature 1: Left Text, Right Widget */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-5 space-y-4">
+            <p className="text-[10px] font-bold text-brand uppercase tracking-wider">Product Features</p>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#111111]">
+              Consolidated Financial Overview
             </h2>
-            <p className="text-sm md:text-base text-text-secondary leading-relaxed font-medium">
-              Every detail is engineered to optimize cash flow, track growth, and make intelligent wealth decisions.
+            <p className="text-sm text-text-secondary leading-relaxed">
+              Aggregate balances, accounts, and history in one visual workspace. Clear tables let you inspect cash registers, equity allocations, and bank reserves with precision.
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map((feature, i) => {
-              const Icon = feature.icon;
-              return (
-                <div 
-                  key={feature.title} 
-                  className="card p-8 space-y-5 hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer"
-                >
-                  <div className="space-y-4">
-                    <div className="w-12 h-12 rounded-2xl bg-brand-bg flex items-center justify-center transition-transform group-hover:scale-105 duration-300">
-                      <Icon className="w-6 h-6 text-brand" />
+          <div className="lg:col-span-7">
+            <div className="bg-white p-6 rounded-xl border border-border shadow-sm space-y-4">
+              <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider">Asset Allocation Ledger</p>
+              <div className="space-y-2">
+                {[
+                  { name: "Emergency Bank Deposit", type: "Liquid Cash", val: "₹4,50,000", pct: "7%" },
+                  { name: "Nifty Index Fund", type: "Equities", val: "₹38,20,000", pct: "59%" },
+                  { name: "Physical Gold Vault", type: "Commodities", val: "₹12,80,000", pct: "20%" },
+                  { name: "Fixed Term Bonds", type: "Debt Asset", val: "₹8,92,000", pct: "14%" },
+                ].map((asset, i) => (
+                  <div key={i} className="flex justify-between items-center py-2.5 border-b border-border/50 text-xs">
+                    <div>
+                      <p className="font-semibold text-[#111111]">{asset.name}</p>
+                      <p className="text-[10px] text-text-muted mt-0.5">{asset.type}</p>
                     </div>
-                    <h3 className="text-base font-bold text-text-primary tracking-tight">{feature.title}</h3>
-                    <p className="text-xs text-text-secondary leading-relaxed">{feature.description}</p>
+                    <div className="text-right">
+                      <p className="font-bold text-[#111111]">{asset.val}</p>
+                      <p className="text-[9px] text-[#0F62FE] font-medium mt-0.5">{asset.pct} total weight</p>
+                    </div>
                   </div>
-                  <div className="pt-2">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-brand group-hover:underline">
-                      {feature.linkText}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+                ))}
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Feature 2: Right Text, Left Widget */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-7 order-2 lg:order-1">
+            <div className="bg-white p-6 rounded-xl border border-border shadow-sm space-y-4">
+              <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider">Monthly Category Limits</p>
+              <div className="space-y-4">
+                {[
+                  { name: "Residential Rent", spent: "₹22,000", limit: "₹22,000", fill: "w-full", color: "bg-brand" },
+                  { name: "Household Groceries & Food", spent: "₹8,450", limit: "₹15,000", fill: "w-[56%]", color: "bg-[#059669]" },
+                  { name: "Utilities & Fuel", spent: "₹4,120", limit: "₹8,000", fill: "w-[51%]", color: "bg-[#059669]" },
+                  { name: "Leisure & Travel", spent: "₹6,800", limit: "₹6,000", fill: "w-full", color: "bg-accent-red" },
+                ].map((cat, i) => (
+                  <div key={i} className="space-y-1.5">
+                    <div className="flex justify-between text-xs font-semibold">
+                      <span className="text-text-secondary">{cat.name}</span>
+                      <span className="text-[#111111]">{cat.spent} / {cat.limit}</span>
+                    </div>
+                    <div className="h-2 bg-page-bg rounded-full overflow-hidden">
+                      <div className={`h-full ${cat.fill} ${cat.color}`} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-5 order-1 lg:order-2 space-y-4">
+            <p className="text-[10px] font-bold text-brand uppercase tracking-wider">Expense Controls</p>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#111111]">
+              Understand Spending Velocity
+            </h2>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              Track category averages, trace leaks, and allocate exact spending thresholds. Build realistic budget bounds so you stay inside your monthly targets comfortably.
+            </p>
+          </div>
+        </div>
+
+        {/* Feature 3: Left Text, Right Widget */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-5 space-y-4">
+            <p className="text-[10px] font-bold text-brand uppercase tracking-wider">Milestones</p>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#111111]">
+              Compounding Goal Tracks
+            </h2>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              Establish concrete savings goals and model their development. Visual milestone metrics show you how consistent allocations compound over months and quarters.
+            </p>
+          </div>
+          <div className="lg:col-span-7">
+            <div className="bg-white p-6 rounded-xl border border-border shadow-sm space-y-6">
+              <div className="flex justify-between items-center">
+                <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider">Milestone Projections</p>
+                <span className="text-xs font-semibold text-[#111111]">2 Active Goals</span>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-page-bg rounded-lg border border-border/50">
+                  <div className="flex justify-between items-center text-xs font-bold mb-2">
+                    <span className="text-[#111111]">Emergency Reserve (6 Months)</span>
+                    <span className="text-[#059669]">82% Complete</span>
+                  </div>
+                  <div className="flex justify-between text-[10px] text-text-muted mb-1.5">
+                    <span>Saved: ₹2,46,000</span>
+                    <span>Target: ₹3,00,000</span>
+                  </div>
+                  <div className="h-1.5 bg-white rounded-full overflow-hidden border border-border/30">
+                    <div className="h-full w-[82%] bg-[#059669]" />
+                  </div>
+                </div>
+
+                <div className="p-4 bg-page-bg rounded-lg border border-border/50">
+                  <div className="flex justify-between items-center text-xs font-bold mb-2">
+                    <span className="text-[#111111]">New Work Station</span>
+                    <span className="text-brand">40% Complete</span>
+                  </div>
+                  <div className="flex justify-between text-[10px] text-text-muted mb-1.5">
+                    <span>Saved: ₹80,000</span>
+                    <span>Target: ₹2,00,000</span>
+                  </div>
+                  <div className="h-1.5 bg-white rounded-full overflow-hidden border border-border/30">
+                    <div className="h-full w-[40%] bg-brand" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </section>
 
-      {/* Interactive Showcase Section */}
-      <section id="showcase" className="py-24 md:py-32 bg-[#FAFAF8] border-y border-border px-6">
-        <div className="max-w-7xl mx-auto">
+      {/* Product Showcase tab bar */}
+      <section id="showcase" className="py-24 bg-white border-t border-b border-border">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
-            <h2 className="text-xs font-bold text-text-muted uppercase tracking-widest">Showcase</h2>
-            <p className="text-2xl md:text-3xl font-bold tracking-tight text-text-primary">
-              The Command Center in Action
+            <h2 className="text-xs font-bold text-text-muted uppercase tracking-widest">Interactive Showcase</h2>
+            <p className="text-2xl md:text-3xl font-bold tracking-tight text-[#111111]">
+              Clarity in Action
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             {/* Left Selection Tabs */}
-            <div className="lg:col-span-4 space-y-3.5">
+            <div className="lg:col-span-4 space-y-2">
               {SHOWCASE_TABS.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 ${
+                  className={`w-full text-left p-5 rounded-lg border transition-all ${
                     activeTab === tab.id
-                      ? "bg-white border-border shadow-md"
-                      : "bg-transparent border-transparent hover:bg-white/40"
+                      ? "bg-page-bg border-border"
+                      : "bg-transparent border-transparent hover:bg-page-bg/40"
                   }`}
                 >
-                  <p className={`text-xs font-bold uppercase tracking-wider ${activeTab === tab.id ? "text-brand" : "text-text-muted"}`}>
+                  <p className={`text-[10px] font-bold uppercase tracking-wider ${activeTab === tab.id ? "text-brand" : "text-text-muted"}`}>
                     {tab.label}
                   </p>
-                  <p className="text-sm font-bold text-text-primary mt-1.5">{tab.title}</p>
+                  <p className="text-sm font-bold text-[#111111] mt-1">{tab.title}</p>
                 </button>
               ))}
             </div>
 
-            {/* Right Active Visualization View */}
+            {/* Right Active Visualization */}
             <div className="lg:col-span-8">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTabContent.id}
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white p-8 rounded-[24px] border border-border shadow-lg space-y-6"
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className="bg-page-bg p-8 rounded-xl border border-border space-y-6"
                 >
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start flex-wrap gap-4">
                     <div>
-                      <h4 className="text-base font-bold text-text-primary">{activeTabContent.title}</h4>
+                      <h4 className="text-base font-bold text-[#111111]">{activeTabContent.title}</h4>
                       <p className="text-xs text-text-secondary mt-1 max-w-md leading-relaxed">{activeTabContent.desc}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-[9px] text-text-muted font-bold uppercase tracking-wider">{activeTabContent.metricLabel}</p>
-                      <p className="text-xl font-extrabold text-text-primary mt-0.5">{activeTabContent.metricValue}</p>
+                    <div>
+                      <p className="text-[9px] text-text-secondary font-bold uppercase tracking-wider">{activeTabContent.metricLabel}</p>
+                      <p className="text-xl font-bold text-[#111111] mt-0.5">{activeTabContent.metricValue}</p>
                     </div>
                   </div>
 
-                  {/* Rendering specific mock visualizations */}
-                  <div className="h-60 bg-[#FAFAF8] rounded-2xl border border-border/80 p-5 flex flex-col justify-between overflow-hidden relative">
+                  <div className="h-60 bg-white rounded-lg border border-border p-5 flex flex-col justify-between overflow-hidden relative">
                     {activeTabContent.id === "networth" && (
                       <>
-                        <div className="flex justify-between items-center text-[10px] text-text-secondary font-bold">
+                        <div className="flex justify-between items-center text-[10px] text-text-muted font-semibold">
                           <span>Q1 2026</span>
                           <span>Q2 2026</span>
-                          <span>Q3 2026</span>
+                          <span>Q3 2026 (Consolidated Balance)</span>
                         </div>
-                        {/* Realistic step area chart SVG */}
                         <svg className="w-full h-32 mt-4" viewBox="0 0 500 100" preserveAspectRatio="none">
-                          <defs>
-                            <linearGradient id="nwGrad" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="0%" stopColor="#0057FF" stopOpacity="0.15" />
-                              <stop offset="100%" stopColor="#0057FF" stopOpacity="0" />
-                            </linearGradient>
-                          </defs>
-                          <path d="M 0 100 Q 100 80 200 60 T 400 30 T 500 10 L 500 100 Z" fill="url(#nwGrad)" />
-                          <path d="M 0 100 Q 100 80 200 60 T 400 30 T 500 10" fill="none" stroke="#0057FF" strokeWidth="3" />
-                          <circle cx="500" cy="10" r="5" fill="#00D18F" stroke="white" strokeWidth="2" />
+                          <path d="M 0 100 Q 100 80 200 60 T 400 30 T 500 12 L 500 100 Z" fill="#F0F4FF" />
+                          <path d="M 0 100 Q 100 80 200 60 T 400 30 T 500 12" fill="none" stroke="#0F62FE" strokeWidth="2" />
+                          <circle cx="500" cy="12" r="4.5" fill="#059669" stroke="white" strokeWidth="1.5" />
                         </svg>
                       </>
                     )}
 
-                    {activeTabContent.id === "coach" && (
+                    {activeTabContent.id === "spending" && (
                       <div className="h-full flex flex-col justify-center space-y-4">
-                        <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-border/80 shadow-sm">
-                          <Sparkles className="w-5 h-5 text-brand shrink-0" />
-                          <div>
-                            <p className="text-xs font-bold text-text-primary">Mutual Fund Optimization Opportunity</p>
-                            <p className="text-[11px] text-text-secondary mt-0.5">Move ₹45,000 cash balance. Estimated compounding yield increase: +₹6,390/yr.</p>
+                        <div className="flex items-center justify-between p-3.5 bg-page-bg rounded-lg border border-border/80 text-xs">
+                          <div className="flex items-center gap-3">
+                            <span className="w-6 h-6 bg-blue-50 text-[#0F62FE] flex items-center justify-center rounded">🏠</span>
+                            <div>
+                              <p className="font-bold text-[#111111]">Residential Rent Transfer</p>
+                              <p className="text-[10px] text-text-muted mt-0.5">Recurring Category limit active</p>
+                            </div>
                           </div>
+                          <span className="font-bold text-accent-red">-₹22,000</span>
                         </div>
-                        <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-border/80 shadow-sm opacity-70">
-                          <Star className="w-5 h-5 text-[#D4AF37] fill-[#D4AF37] shrink-0" />
-                          <div>
-                            <p className="text-xs font-bold text-text-primary">Recurring Subscription Detection</p>
-                            <p className="text-[11px] text-text-secondary mt-0.5">Identify 2 overlapping hosting bills. Cancel option available to unlock savings.</p>
+                        <div className="flex items-center justify-between p-3.5 bg-page-bg rounded-lg border border-border/80 text-xs opacity-75">
+                          <div className="flex items-center gap-3">
+                            <span className="w-6 h-6 bg-emerald-50 text-[#059669] flex items-center justify-center rounded">🛍️</span>
+                            <div>
+                              <p className="font-bold text-[#111111]">Daily Shopping Store</p>
+                              <p className="text-[10px] text-text-muted mt-0.5">Discretionary charge log</p>
+                            </div>
                           </div>
+                          <span className="font-bold text-accent-red">-₹3,850</span>
                         </div>
                       </div>
                     )}
 
                     {activeTabContent.id === "forecast" && (
                       <>
-                        <div className="flex justify-between items-center text-[10px] text-text-secondary font-bold">
-                          <span>Current</span>
-                          <span>+3 Months</span>
-                          <span>+6 Months</span>
-                          <span>+12 Months (Forecast)</span>
+                        <div className="flex justify-between items-center text-[10px] text-text-muted font-semibold">
+                          <span>Current Target</span>
+                          <span>+6 Months Projection</span>
+                          <span>+12 Months (Compound curve)</span>
                         </div>
-                        {/* Dotted forecast visualization SVG */}
                         <svg className="w-full h-32 mt-4" viewBox="0 0 500 100" preserveAspectRatio="none">
-                          <path d="M 0 80 L 150 70 L 300 62" fill="none" stroke="#0057FF" strokeWidth="2.5" />
-                          <path d="M 300 62 Q 400 40 500 20" fill="none" stroke="#D4AF37" strokeWidth="2.5" strokeDasharray="5 5" />
-                          <circle cx="300" cy="62" r="4" fill="#0057FF" />
-                          <circle cx="500" cy="20" r="5" fill="#D4AF37" />
+                          <path d="M 0 80 L 150 70 L 300 62" fill="none" stroke="#6B7280" strokeWidth="1.5" />
+                          <path d="M 300 62 Q 400 40 500 20" fill="none" stroke="#0F62FE" strokeWidth="2.5" strokeDasharray="4 4" />
+                          <circle cx="300" cy="62" r="3.5" fill="#6B7280" />
+                          <circle cx="500" cy="20" r="4.5" fill="#0F62FE" />
                         </svg>
                       </>
                     )}
@@ -584,179 +498,155 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section id="solutions" className="py-24 md:py-32 bg-white px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-20 space-y-2">
-            <h2 className="text-xs font-bold text-text-muted uppercase tracking-widest">Testimonials</h2>
-            <p className="text-2xl md:text-3xl font-bold tracking-tight text-text-primary">
-              Trusted by Ambitious Professionals
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {TESTIMONIALS.map((testimonial, i) => (
-              <div key={i} className="card p-8 flex flex-col justify-between space-y-6 hover:shadow-md transition-shadow">
-                <p className="text-xs md:text-sm text-text-secondary italic leading-relaxed font-medium">
-                  &ldquo;{testimonial.text}&rdquo;
-                </p>
-                <div className="flex items-center gap-3 pt-4 border-t border-border/80">
-                  <div className="w-9 h-9 rounded-full bg-brand-bg text-brand flex items-center justify-center font-bold text-xs uppercase">
-                    {testimonial.name[0]}
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-text-primary">{testimonial.name}</h4>
-                    <p className="text-[10px] text-text-muted mt-0.5">{testimonial.role} · {testimonial.city}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Real Testimonial (Restrained) */}
+      <section className="py-24 max-w-7xl mx-auto px-6 text-center space-y-8">
+        <span className="text-xs font-bold text-text-muted uppercase tracking-widest">USER NOTE</span>
+        <blockquote className="max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl font-medium text-[#111111] leading-relaxed italic">
+            &ldquo;MoneyMap has replaced three separate spreadsheets for me. Having my net worth calculation, monthly budgets, and multi-month savings forecasts in a secure, local sandbox provides actual peace of mind.&rdquo;
+          </p>
+        </blockquote>
+        <div>
+          <cite className="text-xs font-bold text-[#111111] not-italic block uppercase tracking-wider">— Rohan Gupta</cite>
+          <span className="text-[10px] text-text-secondary">Software Engineer · Bangalore</span>
         </div>
       </section>
 
-      {/* Value-Driven Pricing Section */}
-      <section id="pricing" className="py-24 md:py-32 bg-[#FAFAF8] border-t border-border px-6">
+      {/* Simple Pricing Section */}
+      <section id="pricing" className="py-24 bg-page-bg border-t border-border px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-20 space-y-3">
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
             <span className="text-xs font-bold text-text-muted uppercase tracking-widest">Pricing</span>
-            <p className="text-3xl md:text-4xl font-extrabold tracking-tight text-text-primary leading-tight">
+            <p className="text-2xl md:text-3xl font-bold tracking-tight text-[#111111] leading-tight">
               Invest in Your Financial Clarity
             </p>
-            <p className="text-xs md:text-sm text-text-secondary leading-relaxed font-semibold uppercase tracking-wider">
-              No advertising. No data selling. Pure wealth optimization value.
+            <p className="text-xs text-text-secondary leading-relaxed font-semibold uppercase tracking-wider">
+              No advertising. No spam. Simply tracking and metrics value.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Sandbox Starter plan */}
-            <div className="bg-white p-8 rounded-[24px] border border-border shadow-sm flex flex-col justify-between space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {/* Starter Plan */}
+            <div className="bg-white p-8 rounded-lg border border-border shadow-sm flex flex-col justify-between space-y-8">
               <div className="space-y-4">
                 <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Sandbox Free</p>
-                <h3 className="text-2xl font-extrabold text-text-primary">Starter</h3>
+                <h3 className="text-xl font-bold text-[#111111]">Starter</h3>
                 <p className="text-xs text-text-secondary leading-relaxed">
-                  Basic sandbox ledger access to track cash flow and log accounts manually without automated advice.
+                  Basic ledger access to track your cash flow and log transactions manually in local storage.
                 </p>
-                <ul className="space-y-2.5 pt-4 text-xs font-semibold text-text-secondary">
+                <ul className="space-y-2.5 pt-4 text-xs text-text-secondary">
                   <li className="flex items-center gap-2">✓ Manual transaction ledger</li>
-                  <li className="flex items-center gap-2">✓ Default category budgets</li>
+                  <li className="flex items-center gap-2">✓ Category-based budgets</li>
                   <li className="flex items-center gap-2">✓ Sandbox data isolation</li>
                 </ul>
               </div>
-              <Link 
-                href="/login?mode=signup" 
-                className="w-full text-center py-3 btn-secondary border border-border rounded-xl text-xs uppercase tracking-wider font-bold hover:bg-slate-50 transition-colors block"
-              >
-                Sign Up Free
-              </Link>
+              {currentUser ? (
+                <Link href="/dashboard" className="w-full text-center py-2.5 btn-secondary text-xs uppercase tracking-wider font-semibold block">
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <Link href="/login?mode=signup" className="w-full text-center py-2.5 btn-secondary text-xs uppercase tracking-wider font-semibold block">
+                  Sign Up Free
+                </Link>
+              )}
             </div>
 
-            {/* Pro wealth intelligence plan */}
-            <div className="bg-white p-8 rounded-[24px] border-2 border-brand shadow-md flex flex-col justify-between space-y-8 relative overflow-hidden">
-              {/* Gold border banner */}
-              <div className="absolute top-0 right-0 bg-brand text-white px-3 py-1 text-[8px] font-extrabold uppercase tracking-widest rounded-bl-lg">
-                Recommended
-              </div>
-
+            {/* Pro Plan */}
+            <div className="bg-white p-8 rounded-lg border border-[#0F62FE] shadow-sm flex flex-col justify-between space-y-8">
               <div className="space-y-4">
-                <div className="flex items-center gap-1.5">
-                  <p className="text-[10px] font-bold text-brand uppercase tracking-wider">Premium intelligence</p>
-                  <span className="text-[8px] font-bold text-[#D4AF37] bg-amber-50 px-1.5 py-0.5 rounded border border-[#D4AF37]/20 uppercase">Pro</span>
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-bold text-brand uppercase tracking-wider">Premium Account</p>
+                  <span className="text-[8px] font-bold text-[#0F62FE] bg-blue-50 px-2 py-0.5 rounded border border-[#0F62FE]/10 uppercase">Pro</span>
                 </div>
-                <h3 className="text-2xl font-extrabold text-text-primary flex items-baseline gap-1">
-                  ₹299 <span className="text-xs font-medium text-text-secondary">/ month</span>
+                <h3 className="text-xl font-bold text-[#111111] flex items-baseline gap-1">
+                  ₹299 <span className="text-xs font-normal text-text-secondary">/ month</span>
                 </h3>
                 <p className="text-xs text-text-secondary leading-relaxed">
-                  Unlock advanced AI coaches, predictive cash flow mapping, tax recommendations, and high-fidelity target forecast curves.
+                  Unlock advanced forecasting curves, custom category ledgers, recurring calculations, and priority report generation.
                 </p>
-                <ul className="space-y-2.5 pt-4 text-xs font-semibold text-text-secondary">
-                  <li className="flex items-center gap-2 text-brand">✓ AI Financial Coach & suggestions</li>
-                  <li className="flex items-center gap-2">✓ Predictive cash flow forecasting</li>
-                  <li className="flex items-center gap-2">✓ Custom investment category mapping</li>
-                  <li className="flex items-center gap-2 text-[#D4AF37]">✓ Premium goal milestone analytics</li>
-                  <li className="flex items-center gap-2">✓ Priority infrastructure sync speeds</li>
+                <ul className="space-y-2.5 pt-4 text-xs text-text-secondary">
+                  <li className="flex items-center gap-2 text-[#0F62FE]">✓ Active savings forecasting curves</li>
+                  <li className="flex items-center gap-2">✓ Custom investment ledgers</li>
+                  <li className="flex items-center gap-2">✓ Category limit warnings</li>
+                  <li className="flex items-center gap-2">✓ Automated recurring schedules</li>
+                  <li className="flex items-center gap-2">✓ Exportable Excel/CSV sheets</li>
                 </ul>
               </div>
-              <Link 
-                href="/login?mode=signup" 
-                className="w-full text-center py-3 btn-primary rounded-xl text-xs uppercase tracking-wider font-bold shadow-md block"
-              >
-                Upgrade to Intelligence
-              </Link>
+              {currentUser ? (
+                <Link href="/dashboard" className="w-full text-center py-2.5 btn-primary text-xs uppercase tracking-wider font-semibold block">
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <Link href="/login?mode=signup" className="w-full text-center py-2.5 btn-primary text-xs uppercase tracking-wider font-semibold block">
+                  Upgrade Account
+                </Link>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Conversion Block */}
-      <section id="resources" className="py-24 md:py-32 bg-white px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="rounded-[28px] p-10 md:p-16 bg-gradient-to-br from-[#0B132B] to-[#070B19] text-white text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-brand/10 rounded-full blur-[110px] pointer-events-none" />
-
-            <div className="relative z-10 space-y-6">
-              <h2 className="text-2xl md:text-4xl font-extrabold tracking-tight">
-                Ready to Command Your Financial Future?
-              </h2>
-              <p className="text-sm md:text-base text-white/60 max-w-lg mx-auto leading-relaxed">
-                Join wealth-conscious Indian professional families, founders, and investors optimizing cash flow efficiency in one unified workspace.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-3">
-                <Link 
-                  href="/login?mode=signup"
-                  className="px-8 py-4 bg-white text-text-primary font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-slate-100 transition-all shadow-md flex items-center gap-2"
-                >
-                  Get Started Free <ArrowRight className="w-4 h-4 text-text-primary" />
+      {/* Simple CTA conversion block */}
+      <section id="about" className="py-24 bg-white border-t border-border px-6">
+        <div className="max-w-3xl mx-auto text-center space-y-6">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#111111]">
+            Ready to Understand Your Money?
+          </h2>
+          <p className="text-sm text-text-secondary max-w-md mx-auto leading-relaxed">
+            Join the wealth-conscious professionals managing cash registers and savings targets in sandbox isolation.
+          </p>
+          <div className="pt-4">
+            {currentUser ? (
+              <Link href="/dashboard" className="btn-primary px-8 py-3 text-xs uppercase tracking-wider font-semibold inline-flex items-center gap-1.5">
+                Go to Dashboard <ArrowRight className="w-4 h-4" />
+              </Link>
+            ) : (
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link href="/login?mode=signup" className="btn-primary px-6 py-3 text-xs uppercase tracking-wider font-semibold">
+                  Get Started Free
                 </Link>
-                <Link 
-                  href="/login"
-                  className="px-6 py-4 bg-white/5 border border-white/10 text-white font-semibold rounded-xl text-xs uppercase tracking-widest hover:bg-white/15 transition-all"
-                >
+                <Link href="/login" className="btn-secondary px-6 py-3 text-xs uppercase tracking-wider font-semibold">
                   Sign In
                 </Link>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-16 px-6 border-t border-border bg-[#FAFAF8]">
+      {/* Minimal Footer */}
+      <footer className="py-16 px-6 border-t border-border bg-page-bg">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-start mb-12">
-          {/* Brand Info */}
-          <div className="md:col-span-4 space-y-4">
-            <Logo showText={true} iconClassName="w-8 h-8" textClassName="font-extrabold text-sm tracking-tight text-text-primary" />
+          {/* Brand Column */}
+          <div className="md:col-span-4 space-y-3">
+            <Logo showText={true} iconClassName="w-8 h-8" textClassName="font-semibold text-sm tracking-tight text-[#111111]" />
             <p className="text-xs text-text-secondary leading-relaxed max-w-xs">
-              The Financial Operating System for Modern India. Optimize cash flow, aggregate asset records, and leverage wealth intelligence.
+              Understand every rupee. A mature financial operating system to log balances, track categories, and forecast savings.
             </p>
           </div>
 
-          {/* Links Grid */}
-          <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-6">
+          {/* Links Column */}
+          <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-6">
             {[
               {
                 title: "Product",
-                links: ["AI Coach", "Analytics Dashboard", "Goal Forecasts", "Pricing"]
-              },
-              {
-                title: "Solutions",
-                links: ["For Professionals", "For Founders", "Investment Sync", "Wealth Planning"]
+                links: ["Ledger Overview", "Expenses Analysis", "Milestone Goals", "Pricing Plan"]
               },
               {
                 title: "Resources",
-                links: ["API Docs", "Security Sandbox", "Support Desk", "Privacy Policy"]
+                links: ["Security Sandbox", "Client Agreement", "Privacy Protocol", "Contact Desk"]
               },
               {
                 title: "Company",
-                links: ["About Platform", "Brand Security", "Client Terms", "Contact Info"]
+                links: ["About Platform", "Platform Standards", "Support Center", "Terms of Use"]
               }
             ].map((section, idx) => (
-              <div key={idx} className="space-y-3.5">
+              <div key={idx} className="space-y-3">
                 <h4 className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{section.title}</h4>
                 <ul className="space-y-2">
                   {section.links.map((link) => (
                     <li key={link}>
-                      <a href="#" className="text-xs text-text-secondary hover:text-text-primary font-semibold transition-colors">
+                      <a href="#" className="text-xs text-text-secondary hover:text-[#111111] transition-colors">
                         {link}
                       </a>
                     </li>
@@ -767,20 +657,21 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Bottom copyright block */}
-        <div className="max-w-7xl mx-auto pt-8 border-t border-border/80 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[10px] text-text-muted font-semibold uppercase tracking-wider">
+        {/* Bottom Bar */}
+        <div className="max-w-7xl mx-auto pt-8 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[10px] text-text-secondary font-medium">
             © 2026 MoneyMap. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            {["Security Sandbox", "Privacy Policy", "Terms of Use"].map((item) => (
-              <a key={item} href="#" className="text-[10px] text-text-muted hover:text-text-primary font-semibold uppercase tracking-wider transition-colors">
+            {["Sandbox Security", "Privacy Policy", "Terms of Use"].map((item) => (
+              <a key={item} href="#" className="text-[10px] text-text-secondary hover:text-[#111111] transition-colors">
                 {item}
               </a>
             ))}
           </div>
         </div>
       </footer>
+
     </div>
   );
 }

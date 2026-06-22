@@ -1,4 +1,4 @@
-@import "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap";
 @import "tailwindcss";
 
 /* ============================================
@@ -7,42 +7,42 @@
    ============================================ */
 
 @theme {
-  --color-brand: #0057FF;
+  --color-brand: #0F62FE;
   --color-brand-light: #3B82F6;
   --color-brand-bg: #F0F4FF;
-  --color-accent-blue: #0057FF;
-  --color-accent-green: #00D18F;
-  --color-accent-orange: #FF9F00;
-  --color-accent-red: #EF4444;
-  --color-accent-pink: #EC4899;
-  --color-accent-gold: #D4AF37;
-  --color-sidebar: #0B132B;
-  --color-sidebar-dark: #070B19;
-  --color-page-bg: #FAFAF8;
+  --color-accent-blue: #0F62FE;
+  --color-accent-green: #059669;
+  --color-accent-orange: #D97706;
+  --color-accent-red: #DC2626;
+  --color-accent-pink: #DB2777;
+  --color-accent-gold: #B45309;
+  --color-sidebar: #0F172A;
+  --color-sidebar-dark: #090D16;
+  --color-page-bg: #FAFAF7;
   --color-card: #FFFFFF;
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #64748B;
-  --color-text-muted: #94A3B8;
+  --color-text-primary: #111111;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #9CA3AF;
   --color-border: #E5E7EB;
   --color-border-light: #F3F4F6;
   --color-hover: #F3F4F6;
-  --color-hover-row: #F8FAFC;
+  --color-hover-row: #F9FAFB;
 }
 
 :root {
-  --background: #FAFAF8;
-  --foreground: #0F172A;
+  --background: #FAFAF7;
+  --foreground: #111111;
   --card: #FFFFFF;
-  --card-foreground: #0F172A;
+  --card-foreground: #111111;
   --border: #E5E7EB;
-  --ring: #0057FF;
-  --radius: 24px;
+  --ring: #0F62FE;
+  --radius: 8px;
 }
 
 body {
-  background-color: #FAFAF8;
-  color: #0F172A;
-  font-family: "Inter Tight", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #FAFAF7;
+  color: #111111;
+  font-family: "Geist", "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -64,81 +64,82 @@ body {
 .card {
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
-  border-radius: 24px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
 .card:hover {
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+  border-color: #D1D5DB;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
 
 .card-lift:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+  border-color: #D1D5DB;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* ============================================
    BUTTON SYSTEM
    ============================================ */
 .btn-primary {
-  background: linear-gradient(135deg, #0057FF, #3B82F6);
+  background: #0F62FE;
   color: white;
   border: none;
-  border-radius: 14px;
-  font-weight: 600;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px rgba(0, 87, 255, 0.25);
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px 0 rgba(15, 98, 254, 0.2);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(0, 87, 255, 0.35);
+  background: #0043CE;
+  box-shadow: 0 2px 4px 0 rgba(15, 98, 254, 0.25);
 }
 
 .btn-primary:active {
-  transform: translateY(0) scale(0.98);
+  background: #002D9C;
 }
 
 .btn-secondary {
   background: white;
-  color: #0F172A;
+  color: #111111;
   border: 1px solid #E5E7EB;
-  border-radius: 14px;
-  font-weight: 600;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
-  background: #F3F4F6;
+  background: #F9FAFB;
   border-color: #D1D5DB;
-  transform: translateY(-1px);
 }
 
 .btn-ghost {
   background: transparent;
-  color: #64748B;
+  color: #6B7280;
   border: none;
-  border-radius: 14px;
+  border-radius: 8px;
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
 .btn-ghost:hover {
   background: #F3F4F6;
-  color: #0F172A;
+  color: #111111;
 }
 
 /* ============================================
    SIDEBAR GRADIENT
    ============================================ */
 .sidebar-gradient {
-  background: linear-gradient(180deg, #0B132B 0%, #070B19 100%);
+  background: #0F172A;
 }
 
 .sidebar-active {
-  background: linear-gradient(135deg, #0057FF, #3B82F6);
-  box-shadow: 0 4px 12px rgba(0, 87, 255, 0.3);
+  background: #0F62FE;
+  box-shadow: 0 1px 2px rgba(15, 98, 254, 0.2);
 }
 
 /* ============================================
@@ -147,8 +148,8 @@ body {
 .input-field {
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
-  border-radius: 14px;
-  color: #0F172A;
+  border-radius: 8px;
+  color: #111111;
   font-size: 14px;
   transition: all 0.2s ease;
   outline: none;
@@ -167,12 +168,12 @@ body {
 }
 
 .input-field:focus {
-  border-color: #7C3AED;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
+  border-color: #0F62FE;
+  box-shadow: 0 0 0 3px rgba(15, 98, 254, 0.08);
 }
 
 .input-field::placeholder {
-  color: #94A3B8;
+  color: #9CA3AF;
 }
 
 /* ============================================
@@ -230,17 +231,11 @@ body {
    GRADIENT TEXT
    ============================================ */
 .text-gradient-purple {
-  background: linear-gradient(135deg, #7C3AED, #9333EA);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #0F62FE;
 }
 
 .text-gradient-green {
-  background: linear-gradient(135deg, #10B981, #059669);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #059669;
 }
 
 /* ============================================
@@ -259,21 +254,21 @@ body {
    PROGRESS BAR
    ============================================ */
 .progress-gradient {
-  background: linear-gradient(90deg, #7C3AED, #9333EA);
+  background: #0F62FE;
   border-radius: 999px;
   transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .progress-green {
-  background: linear-gradient(90deg, #10B981, #059669);
+  background: #059669;
 }
 
 .progress-orange {
-  background: linear-gradient(90deg, #F59E0B, #D97706);
+  background: #D97706;
 }
 
 .progress-red {
-  background: linear-gradient(90deg, #EF4444, #DC2626);
+  background: #DC2626;
 }
 
 /* ============================================

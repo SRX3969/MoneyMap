@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboard } from "@/context/dashboard-context";
 import { Logo } from "@/components/ui/logo";
@@ -17,7 +17,8 @@ import {
   Sparkles,
   Settings,
   User,
-  Plus
+  Plus,
+  LogOut
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -59,6 +60,7 @@ const NAV_SECTIONS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { setAddTransactionOpen } = useDashboard();
 
   const [currentUser, setCurrentUser] = useState(() => {
@@ -88,6 +90,12 @@ export default function Sidebar() {
     window.addEventListener("moneymap_auth_change", handleAuthChange);
     return () => window.removeEventListener("moneymap_auth_change", handleAuthChange);
   }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("moneymap_user");
+    window.dispatchEvent(new Event("moneymap_auth_change"));
+    router.push("/login");
+  };
 
   return (
     <aside className="hidden md:flex flex-col w-[280px] sidebar-gradient h-screen sticky top-0 shrink-0 select-none z-40 overflow-hidden">
@@ -180,14 +188,21 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Add Transaction CTA */}
-      <div className="p-4 border-t border-white/8 shrink-0 space-y-3">
+      {/* Add Transaction & Sign Out CTAs */}
+      <div className="p-4 border-t border-white/8 shrink-0 space-y-2">
         <button
           onClick={() => setAddTransactionOpen(true)}
-          className="w-full flex items-center justify-center gap-2 py-3 btn-primary rounded-xl text-sm active:scale-[0.97] transition-transform"
+          className="w-full flex items-center justify-center gap-2 py-3 btn-primary rounded-lg text-sm active:scale-[0.97] transition-transform cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Add Transaction</span>
+        </button>
+        <button
+          onClick={handleSignOut}
+          className="w-full flex items-center justify-center gap-2 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white/70 hover:text-white rounded-lg text-xs font-medium active:scale-[0.97] transition-all cursor-pointer"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          <span>Sign Out</span>
         </button>
       </div>
     </aside>

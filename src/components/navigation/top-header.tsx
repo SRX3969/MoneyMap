@@ -1,10 +1,38 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, Bell, ChevronDown } from "lucide-react";
 
 export default function TopHeader() {
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const [currentUser, setCurrentUser] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("moneymap_user");
+      return saved ? JSON.parse(saved) : { name: "Sahil Verma" };
+    }
+    return { name: "Sahil Verma" };
+  });
+
+  const getInitials = (fullName: string) => {
+    return fullName
+      .split(" ")
+      .map((p) => p[0])
+      .join("")
+      .substring(0, 2)
+      .toUpperCase();
+  };
+
+  useEffect(() => {
+    const handleAuthChange = () => {
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("moneymap_user");
+        if (saved) setCurrentUser(JSON.parse(saved));
+      }
+    };
+    window.addEventListener("moneymap_auth_change", handleAuthChange);
+    return () => window.removeEventListener("moneymap_auth_change", handleAuthChange);
+  }, []);
 
   const currentMonth = new Date().toLocaleDateString("en-IN", {
     month: "long",
@@ -42,8 +70,11 @@ export default function TopHeader() {
         {/* Profile Avatar */}
         <div className="flex items-center gap-2.5 pl-3 border-l border-border">
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand to-brand-light flex items-center justify-center text-white font-bold text-xs shadow-sm">
-            SV
+            {getInitials(currentUser.name)}
           </div>
+          <span className="text-xs font-semibold text-text-secondary hidden sm:inline-block">
+            {currentUser.name}
+          </span>
         </div>
       </div>
     </header>

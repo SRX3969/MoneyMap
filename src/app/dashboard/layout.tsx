@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Sidebar from "@/components/navigation/sidebar";
 import BottomNav from "@/components/navigation/bottom-nav";
 import TopHeader from "@/components/navigation/top-header";
@@ -11,6 +13,40 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkAuth = () => {
+      if (typeof window !== "undefined") {
+        const saved = localStorage.getItem("moneymap_user");
+        if (!saved) {
+          router.push("/login");
+        } else {
+          setIsAuthenticated(true);
+        }
+      }
+    };
+    
+    checkAuth();
+    window.addEventListener("moneymap_auth_change", checkAuth);
+    
+    return () => {
+      window.removeEventListener("moneymap_auth_change", checkAuth);
+    };
+  }, [router]);
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen w-screen bg-page-bg text-text-primary select-none">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 rounded-full border-[3px] border-brand/20 border-t-brand animate-spin" />
+          <p className="text-[10px] font-bold tracking-widest text-text-secondary uppercase">Verifying session...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen w-screen bg-page-bg overflow-hidden text-text-primary select-none">
       
